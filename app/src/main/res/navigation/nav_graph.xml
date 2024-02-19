@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/head">
+
+    <fragment
+        android:id="@+id/head"
+        android:name="com.example.imitatejuejin2.ui.fragment.HeadFragment"
+        tools:layout="@layout/fragment_head">
+        <action
+            android:id="@+id/action_headFragment_to_blankFragment1"
+            app:destination="@id/item2" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/item2"
+        android:name="com.example.imitatejuejin2.ui.fragment.BlankFragment1"
+        tools:layout="@layout/fragment_blank1">
+        <action
+            android:id="@+id/action_blankFragment1_to_writeFragment"
+            app:destination="@id/write" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/write"
+        android:name="com.example.imitatejuejin2.ui.fragment.WriteFragment"
+        tools:layout="@layout/fragment_write">
+        <action
+            android:id="@+id/action_writeFragment_to_blankFragment2"
+            app:destination="@id/item4" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/item4"
+        android:name="com.example.imitatejuejin2.ui.fragment.BlankFragment2"
+        tools:layout="@layout/fragment_blank2">
+        <action
+            android:id="@+id/action_blankFragment2_to_mineFragment"
+            app:destination="@id/mine" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/mine"
+        android:name="com.example.imitatejuejin2.ui.fragment.MineFragment"
+        tools:layout="@layout/fragment_mine"/>
+
+</navigation>

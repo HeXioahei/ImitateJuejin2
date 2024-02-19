@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/img_whole_background"
+    app:guidelineUseRtl="true"
+    tools:context=".ui.activity.RegisterActivity">
+
+    <EditText
+        android:id="@+id/registerUsername"
+        android:layout_width="213dp"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_input"
+        android:gravity="bottom"
+        android:hint="请输入用户名"
+        android:fontFamily="@font/font1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"/>
+
+    <EditText
+        android:id="@+id/confirmPassword"
+        android:layout_width="213dp"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_input"
+        android:gravity="bottom"
+        android:hint="请确认密码"
+        android:fontFamily="@font/font1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerPassword"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/registerHeadImage"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:background="@drawable/img_register_headimage_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:gravity="center"
+        android:text="注   册"
+        android:fontFamily="@font/font1"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/registerUsername"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerHeadImage" />
+
+    <EditText
+        android:id="@+id/registerPassword"
+        android:layout_width="213dp"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_input"
+        android:gravity="bottom"
+        android:hint="请输入密码"
+        android:fontFamily="@font/font1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerUsername" />
+
+    <ImageView
+        android:id="@+id/registerBtn"
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:background="@drawable/btn_confirm_register"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline5" />
+
+    <ImageView
+        android:id="@+id/registerReturn"
+        android:layout_width="100dp"
+        android:layout_height="38dp"
+        android:background="@drawable/btn_from_register_to_login"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.090287276" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.39808482" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.63885087" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_article"
+    android:layout_width="match_parent"
+    android:layout_height="180dp">
+
+    <TextView
+        android:id="@+id/itemTitle"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/font1"
+        android:maxLines="1"
+        android:text="测试aaaaaaaaaaaaaaa啊啊啊啊啊啊啊啊"
+        android:textSize="30sp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/itemHeadImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/img_headimage_test"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemTitle" />
+
+    <TextView
+        android:id="@+id/itemUserName"
+        android:layout_width="200dp"
+        android:layout_height="20dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="测试啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/guideline24"
+        app:layout_constraintTop_toBottomOf="@+id/itemTitle" />
+
+    <TextView
+        android:id="@+id/itemTime"
+        android:layout_width="200dp"
+        android:layout_height="20dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="2024/02/01  21:38:23"
+        android:textColor="#808080"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/guideline24"
+        app:layout_constraintTop_toBottomOf="@+id/itemUserName" />
+
+    <TextView
+        android:id="@+id/itemContent"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:text="测试啊啊啊啊啊啊\n啊啊啊啊啊啊啊\n啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"
+        android:textSize="13sp"
+        app:layout_constraintTop_toBottomOf="@+id/itemHeadImage"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="70dp" />
+
+    <ImageView
+        android:id="@+id/itemHit"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:background="@drawable/img_hit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemContent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/itemHits"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:text="1024"
+        android:textColor="#808080"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/itemHit"
+        app:layout_constraintTop_toBottomOf="@+id/itemContent"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/itemLike"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/img_unliked"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/itemHits"
+        app:layout_constraintTop_toBottomOf="@+id/itemContent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/itemLikes"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:text="1024"
+        android:textColor="#808080"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/itemLike"
+        app:layout_constraintTop_toBottomOf="@+id/itemContent"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/itemCollect"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/img_uncollected"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/itemLikes"
+        app:layout_constraintTop_toBottomOf="@+id/itemContent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/itemCollects"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:text="1024"
+        android:textColor="#808080"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/itemCollect"
+        app:layout_constraintTop_toBottomOf="@+id/itemContent"
+        tools:ignore="MissingConstraints" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="50dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
