@@ -27,10 +27,11 @@ object CommentsList {
                 ) {
                     val back = response.body()
                     val code = back?.baseResponse?.code
-                    FlagBuilder.setHasSetCommentsList(true)
-                    if (code == 200) {
-                        Log.d("comment", "success")
+                    if (back?.data != null) {
+                        parentCommentsList = back.data
+                        Log.d("createComments", "success")
                     }
+                    FlagBuilder.setHasSetCommentsList(true)
                 }
 
                 override fun onFailure(call: Call<GetCommentsResponse>, t: Throwable) {
@@ -38,5 +39,4 @@ object CommentsList {
                 }
             })
     }
-
 }

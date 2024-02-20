@@ -13,7 +13,9 @@ import com.bumptech.glide.Glide
 import com.example.imitatejuejin2.R
 import com.example.imitatejuejin2.databinding.ActivityEditMyInfoBinding
 import com.example.imitatejuejin2.databinding.EditPasswordBinding
+import com.example.imitatejuejin2.model.AuthorBriefBuilder
 import com.example.imitatejuejin2.model.AuthorizationBuilder
+import com.example.imitatejuejin2.model.HasChanged
 import com.example.imitatejuejin2.model.ServiceCreator
 import com.example.imitatejuejin2.requestinterface.mine.EditHeadImageService
 import com.example.imitatejuejin2.requestinterface.mine.EditPasswordService
@@ -35,6 +37,7 @@ class EditMyInfoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("a2", "a2")
         binding = ActivityEditMyInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -73,6 +76,8 @@ class EditMyInfoActivity : AppCompatActivity() {
                                         Toast.LENGTH_SHORT
                                     ).show()
                                     Glide.with(this@EditMyInfoActivity).load(uri).into(binding.editHeadImageView)
+                                    AuthorBriefBuilder.setAuthorBrief(Authorization)
+                                    HasChanged.setHeadImageHasChangedValue(true)
                                 } else {
                                     Toast.makeText(
                                         this@EditMyInfoActivity,
@@ -135,11 +140,15 @@ class EditMyInfoActivity : AppCompatActivity() {
                     ) {
                         val back = response.body()
                         val code = back?.code
+                        Log.d("usernameCode", code.toString())
                         if (code == 200) {
                             Toast.makeText(
                                 this@EditMyInfoActivity, "更改成功", Toast.LENGTH_SHORT
                             ).show()
+                            AuthorBriefBuilder.setAuthorBrief(Authorization)
+                            HasChanged.setUsernameHasChangedValue(true)
                             username = inputText
+                            binding.editUsernameText.text = username
                             dialog.dismiss()
                         } else {
                             Toast.makeText(
@@ -185,6 +194,8 @@ class EditMyInfoActivity : AppCompatActivity() {
                             Toast.makeText(
                                 this@EditMyInfoActivity, "更改成功", Toast.LENGTH_SHORT
                             ).show()
+                            AuthorBriefBuilder.setAuthorBrief(Authorization)
+                            HasChanged.setPasswordHasChangedValue(true)
                             dialog.dismiss()
                         } else {
                             Toast.makeText(

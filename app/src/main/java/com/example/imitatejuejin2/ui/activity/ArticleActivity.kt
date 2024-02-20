@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
@@ -15,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.example.imitatejuejin2.R
 import com.example.imitatejuejin2.data.GetCommentsData
 import com.example.imitatejuejin2.databinding.ActivityArticleBinding
+import com.example.imitatejuejin2.model.ArticleList
 import com.example.imitatejuejin2.model.AuthorizationBuilder
 import com.example.imitatejuejin2.model.CommentsList
 import com.example.imitatejuejin2.model.FlagBuilder
@@ -26,7 +26,6 @@ import com.example.imitatejuejin2.requestinterface.article.CollectService
 import com.example.imitatejuejin2.requestinterface.article.GetCommentsService
 import com.example.imitatejuejin2.requestinterface.article.LikeService
 import com.example.imitatejuejin2.requestinterface.article.WriteCommentService
-import com.example.imitatejuejin2.requestinterface.mine.EditPasswordService
 import com.example.imitatejuejin2.response.BaseResponse
 import com.example.imitatejuejin2.response.GetCommentsResponse
 import com.example.imitatejuejin2.ui.adapter.CommentListRecyclerView1
@@ -39,7 +38,7 @@ class ArticleActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityArticleBinding
     companion object {
-        private var parentCommentList: MutableList<GetCommentsData> = CommentsList.getParentCommentsList()
+        private lateinit var parentCommentList: MutableList<GetCommentsData>
         private lateinit var commentListRecyclerView1: CommentListRecyclerView1
     }
 
@@ -65,23 +64,35 @@ class ArticleActivity : AppCompatActivity() {
         binding.articleComments.text = intent.getStringExtra("comments").toString()
 
         val articleId = intent.getStringExtra("id") as String
-        val likeStatusValue = intent.getStringExtra("like_status").toString()
-        val collectStatusValue = intent.getStringExtra("collect_status").toString()
+
+
+        var likeStatusValue = intent.getStringExtra("like_status").toString()
+        if (likeStatusValue == "1") {
+            binding.articleLike.setImageResource(R.drawable.img_liked)
+        } else {
+            binding.articleLike.setImageResource(R.drawable.img_unliked)
+        }
+
+        var collectStatusValue = intent.getStringExtra("collect_status").toString()
+        if (collectStatusValue == "1") {
+            binding.articleCollect.setImageResource(R.drawable.img_collected)
+            val collects = binding.articleCollects.text.toString().toInt() + 1
+            binding.articleCollects.text = collects.toString()
+        } else {
+            binding.articleCollect.setImageResource(R.drawable.img_uncollected)
+            val collects = binding.articleCollects.text.toString().toInt() - 1
+            binding.articleCollects.text = collects.toString()
+        }
+
         val Authorization = AuthorizationBuilder.getAuthorization()
 
         // 获取评论列表并呈现
-        //setComments(articleId)
+        parentCommentList = CommentsList.getParentCommentsList()
         commentListRecyclerView1 = CommentListRecyclerView1(parentCommentList, this@ArticleActivity, articleId)
         binding.commentRV.adapter = commentListRecyclerView1
         val layoutManager = LinearLayoutManager(this@ArticleActivity)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.commentRV.layoutManager = layoutManager
-
-//        binding.articleTitle.text = "测试标题"
-//        binding.articleContent.text = "测试内容"
-//        binding.articleLikes.text = "1024"
-//        binding.articleCollects.text = "1024"
-//        binding.articleComments.text = "1024"
 
         // 返回上一页
         binding.articleReturn.setOnClickListener {
@@ -90,14 +101,18 @@ class ArticleActivity : AppCompatActivity() {
 
         // 点赞
         binding.articleLike.setOnClickListener {
-//            val id = "1"
-//            val Anthorization = ""
-//            val statusValue = "0"
             val id = articleId
             val Anthorization = Authorization
-            val statusValue = likeStatusValue
+            val aimStatusValue: String
+            if (likeStatusValue == "0") {
+                aimStatusValue = "1"
+            } else {
+                aimStatusValue = "0"
+            }
+
+            // val statusValue = likeStatusValue
             val appService = ServiceCreator.create(LikeService::class.java)
-            val status = FormBody.Builder().add("status",statusValue).build()
+            val status = FormBody.Builder().add("status",aimStatusValue).build()
             appService.like(id, Anthorization, status).enqueue(object : Callback<BaseResponse> {
                 override fun onResponse(
                     call: Call<BaseResponse>,
@@ -107,18 +122,22 @@ class ArticleActivity : AppCompatActivity() {
                     val code = back?.code
                     if (code == 200) {
                         // 图标变化 和 数字变化
-                        if (statusValue == "1") {
+                        if (aimStatusValue == "1") {
                             // 点赞后的变化
                             binding.articleLike.setImageResource(R.drawable.img_liked)
                             val likes = binding.articleLikes.text.toString().toInt() + 1
                             binding.articleLikes.text = likes.toString()
+                            likeStatusValue = "1"
                         } else {
                             // 取消点赞后的变化
                             binding.articleLike.setImageResource(R.drawable.img_unliked)
                             val likes = binding.articleLikes.text.toString().toInt() - 1
                             binding.articleLikes.text = likes.toString()
+                            likeStatusValue = "0"
                         }
-                        HasChanged.setArticlesItemHasChangedValue(true)
+                        ArticleList.setAllArticleList(Authorization)
+                        HasChanged.setArticlesItemHasChangedValue1(true)
+                        HasChanged.setArticlesItemHasChangedValue2(true)
                     }
                 }
 
@@ -130,14 +149,17 @@ class ArticleActivity : AppCompatActivity() {
 
         // 收藏
         binding.articleCollect.setOnClickListener {
-//            val id = "1"
-//            val Anthorization = ""
-//            val statusValue = "0"
             val id = articleId
             val Anthorization = Authorization
-            val statusValue = collectStatusValue
+            val aimStatusValue: String
+            if (collectStatusValue == "0") {
+                aimStatusValue = "1"
+            } else {
+                aimStatusValue = "0"
+            }
+            // val statusValue = collectStatusValue
 
-            val status = FormBody.Builder().add("status", statusValue).build()
+            val status = FormBody.Builder().add("status", aimStatusValue).build()
             ServiceCreator.create(CollectService::class.java)
                 .collect(id, Anthorization, status)
                 .enqueue(object : Callback<BaseResponse> {
@@ -149,16 +171,20 @@ class ArticleActivity : AppCompatActivity() {
                         val code = back?.code
                         if (code == 200) {
                             // 图标变化 和 数字变化
-                            if (statusValue == "1") {
+                            if (aimStatusValue == "1") {
                                 binding.articleCollect.setImageResource(R.drawable.img_collected)
                                 val collects = binding.articleCollects.text.toString().toInt() + 1
                                 binding.articleCollects.text = collects.toString()
+                                collectStatusValue = "1"
                             } else {
                                 binding.articleCollect.setImageResource(R.drawable.img_uncollected)
                                 val collects = binding.articleCollects.text.toString().toInt() - 1
                                 binding.articleCollects.text = collects.toString()
+                                collectStatusValue = "0"
                             }
-                            HasChanged.setArticlesItemHasChangedValue(true)
+                            ArticleList.setAllArticleList(Authorization)
+                            HasChanged.setArticlesItemHasChangedValue1(true)
+                            HasChanged.setArticlesItemHasChangedValue2(true)
                         }
                     }
 
@@ -189,11 +215,16 @@ class ArticleActivity : AppCompatActivity() {
                             ) {
                                 if (response.body()?.code == 200) {
                                     Log.d("comment", "评论成功")
-                                    // 重新获取评论列表
-                                    updateParentComments(articleId)
+                                    // 重新获取并更新评论列表
+                                    CommentsList.createParentCommentsList(articleId)
+                                    // HasChanged.setCommentsItemHasChangedValue(true)
+                                    Log.d("change", HasChanged.getCommentsItemHasChangedValue().toString())
+                                    Thread.sleep(1000L)
+                                    dialog.dismiss()
                                     // 跳转到评论区
                                     toComments()
-                                    dialog.dismiss()
+                                    recreate()
+
                                 } else {
                                     Log.d("comment", "评论失败")
                                 }
@@ -231,32 +262,48 @@ class ArticleActivity : AppCompatActivity() {
     }
 
     // 获取评论列表
-    fun setComments(articleId: String) {
-        ServiceCreator.create(GetCommentsService::class.java)
-            .getCommentService(articleId)
-            .enqueue(object : Callback<GetCommentsResponse> {
-                override fun onResponse(
-                    call: Call<GetCommentsResponse>,
-                    response: Response<GetCommentsResponse>,
-                ) {
-                    val back = response.body()
-                    val code = back?.baseResponse?.code
-                    if (code == 200) {
-                        parentCommentList = back.data
-                    }
-                }
-
-                override fun onFailure(call: Call<GetCommentsResponse>, t: Throwable) {
-                    t.printStackTrace()
-                }
-            })
-    }
+//    fun setComments(articleId: String) {
+//        ServiceCreator.create(GetCommentsService::class.java)
+//            .getCommentService(articleId)
+//            .enqueue(object : Callback<GetCommentsResponse> {
+//                override fun onResponse(
+//                    call: Call<GetCommentsResponse>,
+//                    response: Response<GetCommentsResponse>,
+//                ) {
+//                    val back = response.body()
+//                    val code = back?.baseResponse?.code
+//                    if (code == 200) {
+//                        parentCommentList = back.data
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<GetCommentsResponse>, t: Throwable) {
+//                    t.printStackTrace()
+//                }
+//            })
+//    }
 
     // 更新一级评论列表hjj1
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateParentComments(articleId: String) {
-        setComments(articleId)
-        // 外部 notify （即一级评论列表notify）
-        commentListRecyclerView1.notifyDataSetChanged()
-    }
+//    @SuppressLint("NotifyDataSetChanged")
+//    fun updateParentComments(articleId: String) {
+//        setComments(articleId)
+//        // 外部 notify （即一级评论列表notify）
+//        commentListRecyclerView1.notifyDataSetChanged()
+//    }
+
+//    @SuppressLint("NotifyDataSetChanged")
+//    override fun onResume() {
+//        super.onResume()
+//        Log.d("onResume", "onResume")
+//        val commentsItemHasChangedValue = HasChanged.getCommentsItemHasChangedValue()
+//        if (commentsItemHasChangedValue) {
+//            Log.d("notify", "notify")
+//            val newParentCommentList = CommentsList.getParentCommentsList()
+//            parentCommentList.clear()
+//            parentCommentList.addAll(newParentCommentList)
+//            Log.d("newComment", "success")
+//        }
+//        commentListRecyclerView1.notifyDataSetChanged()
+//        HasChanged.setCommentsItemHasChangedValue(false)
+//    }
 }

@@ -18,7 +18,6 @@ class NavRecyclerView(
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val itemText: TextView = view.findViewById(R.id.item_nav_head)
-        val cursorView: ImageView = view.findViewById(R.id.cursorView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

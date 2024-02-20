@@ -164,5 +164,11 @@ object ArticleList {
         return blankList
     }
 
-
+    fun setAllArticleList(Authorization: String) {
+        createNewArticleList(Authorization)
+        createHotArticleList(Authorization)
+        createMyArticleList(Authorization)
+        createLikesArticleList(Authorization)
+        createCollectArticleList(Authorization)
+    }
 }

@@ -15,12 +15,14 @@ import com.bumptech.glide.Glide
 import com.example.imitatejuejin2.R
 import com.example.imitatejuejin2.databinding.ItemArticleBinding
 import com.example.imitatejuejin2.model.Article
+import com.example.imitatejuejin2.model.ArticleList
 import com.example.imitatejuejin2.model.AuthorizationBuilder
 import com.example.imitatejuejin2.model.CommentsList
 import com.example.imitatejuejin2.model.FlagBuilder
 import com.example.imitatejuejin2.model.HasChanged
 import com.example.imitatejuejin2.model.MarkdownText
 import com.example.imitatejuejin2.model.ServiceCreator
+import com.example.imitatejuejin2.requestinterface.article.HitService
 import com.example.imitatejuejin2.requestinterface.mine.DeleteArticleService
 import com.example.imitatejuejin2.response.BaseResponse
 import com.example.imitatejuejin2.ui.activity.ArticleActivity
@@ -100,6 +102,24 @@ class ArticleListRecyclerView(
                 putExtra("comments", item.comments.toString())
                 putExtra("id", item.id.toString())
             }
+
+            // 点击量更新
+            ServiceCreator.create(HitService::class.java)
+                .hit(item.id.toString(), AuthorizationBuilder.getAuthorization())
+                .enqueue(object : Callback<BaseResponse> {
+                    override fun onResponse(
+                        call: Call<BaseResponse>,
+                        response: Response<BaseResponse>,
+                    ) {
+                        val back = response.body()
+                    }
+
+                    override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
+                        t.printStackTrace()
+                    }
+                })
+
+            // 创建其评论列表
             GlobalScope.launch {
                 CommentsList.createParentCommentsList(item.id.toString())
 
@@ -132,7 +152,9 @@ class ArticleListRecyclerView(
                             ) {
                                 if (response.body()?.code == 200) {
                                     Toast.makeText(activity, "删除成功", Toast.LENGTH_SHORT).show()
-                                    HasChanged.setArticlesItemHasChangedValue(true)
+                                    ArticleList.setAllArticleList(Authorization)
+                                    HasChanged.setArticlesItemHasChangedValue1(true)
+                                    HasChanged.setArticlesItemHasChangedValue2(true)
                                 } else {
                                     Toast.makeText(activity, "删除失败", Toast.LENGTH_SHORT).show()
                                 }
@@ -155,14 +177,4 @@ class ArticleListRecyclerView(
             true
         }
     }
-
-//    // 更新数据
-//    @SuppressLint("NotifyDataSetChanged")
-//    fun updateData(newList: MutableList<Article>) {
-//        if (!newList.equals(list)) {
-//            list.clear()
-//            list.addAll(newList)
-//            notifyDataSetChanged()
-//        }
-//    }
 }

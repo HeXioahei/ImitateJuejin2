@@ -20,6 +20,8 @@ import com.example.imitatejuejin2.R
 import com.example.imitatejuejin2.data.GetCommentsData
 import com.example.imitatejuejin2.databinding.ItemParentCommentsBinding
 import com.example.imitatejuejin2.model.AuthorizationBuilder
+import com.example.imitatejuejin2.model.CommentsList
+import com.example.imitatejuejin2.model.HasChanged
 import com.example.imitatejuejin2.model.ServiceCreator
 import com.example.imitatejuejin2.model.Time
 import com.example.imitatejuejin2.requestinterface.article.WriteCommentService
@@ -97,12 +99,15 @@ class CommentListRecyclerView1(
                             response: Response<BaseResponse>,
                         ) {
                             if (response.body()?.code == 200) {
-                                Log.d("comment", "评论成功")
+                                Log.d("comment2", "评论成功")
                                 // 二级评论 notify
-                                adapter.notifyDataSetChanged()
+                                CommentsList.createParentCommentsList(articleId)
+                                // HasChanged.setCommentsItemHasChangedValue(true)
+                                Thread.sleep(1000L)
                                 dialog.dismiss()
+                                activity.recreate()
                             } else {
-                                Log.d("comment", "评论失败")
+                                Log.d("comment2", "评论失败")
                             }
                         }
 

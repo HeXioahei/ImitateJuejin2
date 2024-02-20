@@ -53,13 +53,5 @@ class ArticleTypeViewPager(
         val layoutManager2 = LinearLayoutManager(activity)
         layoutManager2.orientation = LinearLayoutManager.VERTICAL
         holder.viewPagerItem.layoutManager = layoutManager2
-
-
-        val articlesItemHasChangedValue = HasChanged.getArticlesItemHasChangedValue()
-        // 内部 notify
-        if (articlesItemHasChangedValue) {
-            adapter.notifyDataSetChanged()
-            HasChanged.setArticlesItemHasChangedValue(false)
-        }
     }
 }
