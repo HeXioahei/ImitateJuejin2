@@ -46,6 +46,16 @@ class HeadFragment : Fragment() {
             ArticleList.getBlankList(),
             ArticleList.getBlankList()
         )
+    companion object {
+        private var currentPosition = 0
+            fun getCurrentPosition(): Int {
+                return currentPosition
+            }
+
+            fun setCurrentPosition(value: Int) {
+                currentPosition = value
+            }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -96,8 +106,11 @@ class HeadFragment : Fragment() {
             binding.articlesGuide.layoutManager = layoutInflater
 
             binding.listContent.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                @SuppressLint("NotifyDataSetChanged")
                 override fun onPageSelected(position: Int) {
+                    setCurrentPosition(position)
                     binding.articlesGuide.scrollToPosition(position)
+                    navRecyclerView.notifyDataSetChanged()
                 }
             })
         }
@@ -179,7 +192,7 @@ class HeadFragment : Fragment() {
         }
         val mainActivity: MainActivity
         if (activity != null) {
-            val mainActivity = activity as MainActivity
+            mainActivity = activity as MainActivity
             articleTypeViewPager =
                 ArticleTypeViewPager(outerList, mainActivity, authorBrief.username)
             binding.listContent.adapter = articleTypeViewPager

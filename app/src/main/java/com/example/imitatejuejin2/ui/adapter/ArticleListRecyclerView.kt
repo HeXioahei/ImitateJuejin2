@@ -16,6 +16,8 @@ import com.example.imitatejuejin2.R
 import com.example.imitatejuejin2.databinding.ItemArticleBinding
 import com.example.imitatejuejin2.model.Article
 import com.example.imitatejuejin2.model.AuthorizationBuilder
+import com.example.imitatejuejin2.model.CommentsList
+import com.example.imitatejuejin2.model.FlagBuilder
 import com.example.imitatejuejin2.model.HasChanged
 import com.example.imitatejuejin2.model.MarkdownText
 import com.example.imitatejuejin2.model.ServiceCreator
@@ -23,6 +25,11 @@ import com.example.imitatejuejin2.requestinterface.mine.DeleteArticleService
 import com.example.imitatejuejin2.response.BaseResponse
 import com.example.imitatejuejin2.ui.activity.ArticleActivity
 import com.example.imitatejuejin2.ui.activity.MainActivity
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -57,6 +64,7 @@ class ArticleListRecyclerView(
 
     override fun getItemCount() = list.size
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         Log.d("recyclerView2", "recyclerView2")
@@ -92,7 +100,19 @@ class ArticleListRecyclerView(
                 putExtra("comments", item.comments.toString())
                 putExtra("id", item.id.toString())
             }
-            activity.startActivity(intent)
+            GlobalScope.launch {
+                CommentsList.createParentCommentsList(item.id.toString())
+
+                while (true) {
+                    if (FlagBuilder.getHasSetCommentsList()) {
+                        activity.startActivity(intent)
+                        break
+                    }
+                    withContext(Dispatchers.IO) {
+                        Thread.sleep(500L)
+                    }
+                }
+            }
         }
 
         // 删除文章

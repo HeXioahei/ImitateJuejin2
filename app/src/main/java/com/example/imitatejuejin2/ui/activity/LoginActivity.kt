@@ -1,17 +1,23 @@
 package com.example.imitatejuejin2.ui.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.imitatejuejin2.databinding.ActivityLoginBinding
 import com.example.imitatejuejin2.model.ArticleList
 import com.example.imitatejuejin2.model.AuthorBriefBuilder
 import com.example.imitatejuejin2.model.AuthorizationBuilder
+import com.example.imitatejuejin2.model.FlagBuilder
 import com.example.imitatejuejin2.model.ServiceCreator
 import com.example.imitatejuejin2.requestinterface.begin.LoginService
 import com.example.imitatejuejin2.response.LoginResponse
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,6 +26,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -49,13 +56,53 @@ class LoginActivity : AppCompatActivity() {
                         Log.d("code", "$code")
                         Log.d("Authorization", Authorization.toString())
                         if (code == 200 && Authorization != null) {
-                            Toast.makeText(this@LoginActivity, "登录成功", Toast.LENGTH_SHORT).show()
                             val intent = Intent(this@LoginActivity, MainActivity::class.java)
                             AuthorizationBuilder.setAuthorization(Authorization)
                             Log.d("Authorization2", AuthorizationBuilder.getAuthorization())
-                            ArticleList.createNewArticleList(Authorization)
-                            ArticleList.createHotArticleList(Authorization)
-                            AuthorBriefBuilder.setAuthorBrief(Authorization, this@LoginActivity, intent)
+
+                            GlobalScope.launch {
+                                try {
+                                    // 假设你有多个网络请求需要执行
+                                    ArticleList.createNewArticleList(Authorization)
+                                    ArticleList.createHotArticleList(Authorization)
+                                    ArticleList.createMyArticleList(Authorization)
+                                    ArticleList.createLikesArticleList(Authorization)
+                                    ArticleList.createCollectArticleList(Authorization)
+                                    AuthorBriefBuilder.setAuthorBrief(Authorization)
+
+                                    while (true) {
+                                        Log.d("FlagBuilder.getHasSetAuthorBrief()", FlagBuilder.getHasSetAuthorBrief().toString())
+                                        Log.d("FlagBuilder.getHasSetNewList()", FlagBuilder.getHasSetNewList().toString())
+                                        Log.d("FlagBuilder.getHasSetHotList()", FlagBuilder.getHasSetHotList().toString())
+                                        Log.d("FlagBuilder.getHasSetMyList()", FlagBuilder.getHasSetMyList().toString())
+                                        Log.d("FlagBuilder.getHasSetLikeList()", FlagBuilder.getHasSetLikeList().toString())
+                                        Log.d("FlagBuilder.getHasSetCollectList()", FlagBuilder.getHasSetCollectList().toString())
+                                        if (
+                                            FlagBuilder.getHasSetAuthorBrief()
+                                            && FlagBuilder.getHasSetNewList()
+                                            && FlagBuilder.getHasSetHotList()
+                                            && FlagBuilder.getHasSetMyList()
+                                            && FlagBuilder.getHasSetLikeList()
+                                            && FlagBuilder.getHasSetCollectList()
+                                        ) {
+                                            Log.d("intent", "intent")
+                                            startActivity(intent)
+                                            Toast.makeText(
+                                                this@LoginActivity,
+                                                "登录成功",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            break
+                                        }
+                                        withContext(Dispatchers.IO) {
+                                            Thread.sleep(500L)
+                                        }
+                                    }
+                                } catch (e: Exception) {
+                                    // 处理任何异常
+                                    e.printStackTrace()
+                                }
+                            }
                         } else {
                             Toast.makeText(this@LoginActivity, "登录失败", Toast.LENGTH_SHORT).show()
                         }

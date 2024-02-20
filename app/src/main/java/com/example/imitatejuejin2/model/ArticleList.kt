@@ -31,6 +31,7 @@ object ArticleList {
                 if (back?.data != null) {
                     hotList = back.data
                 }
+                FlagBuilder.setHasSetHotList(true)
             }
 
             override fun onFailure(call: Call<GetArticleListResponse>, t: Throwable) {
@@ -56,7 +57,10 @@ object ArticleList {
                     Log.d("newListContent1", newList[0].toString())
                     Log.d("newListContent11", newList[0].author.toString())
                     Log.d("newListContent111", newList[0].author.username)
+
                 }
+
+                FlagBuilder.setHasSetNewList(true)
             }
 
             override fun onFailure(call: Call<GetArticleListResponse>, t: Throwable) {
@@ -78,7 +82,10 @@ object ArticleList {
                 if (back?.data != null) {
                     myList = back.data
                     Log.d("myList", myList.size.toString())
+
                 }
+
+                FlagBuilder.setHasSetMyList(true)
             }
 
             override fun onFailure(call: Call<GetArticleListResponse>, t: Throwable) {
@@ -98,7 +105,10 @@ object ArticleList {
                 Log.d("list4", "list4")
                 if (back?.data != null) {
                     collectList = back.data
+
                 }
+
+                FlagBuilder.setHasSetCollectList(true)
             }
 
             override fun onFailure(call: Call<GetArticleListResponse>, t: Throwable) {
@@ -118,7 +128,10 @@ object ArticleList {
                 Log.d("list5", "list5")
                 if (back?.data != null) {
                     likeList = back.data
+
                 }
+
+                FlagBuilder.setHasSetLikeList(true)
             }
 
             override fun onFailure(call: Call<GetArticleListResponse>, t: Throwable) {

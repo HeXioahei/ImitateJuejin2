@@ -16,6 +16,8 @@ import com.example.imitatejuejin2.R
 import com.example.imitatejuejin2.data.GetCommentsData
 import com.example.imitatejuejin2.databinding.ActivityArticleBinding
 import com.example.imitatejuejin2.model.AuthorizationBuilder
+import com.example.imitatejuejin2.model.CommentsList
+import com.example.imitatejuejin2.model.FlagBuilder
 import com.example.imitatejuejin2.model.HasChanged
 import com.example.imitatejuejin2.model.MarkdownText
 import com.example.imitatejuejin2.model.ServiceCreator
@@ -37,7 +39,7 @@ class ArticleActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityArticleBinding
     companion object {
-        private lateinit var parentCommentList: MutableList<GetCommentsData>
+        private var parentCommentList: MutableList<GetCommentsData> = CommentsList.getParentCommentsList()
         private lateinit var commentListRecyclerView1: CommentListRecyclerView1
     }
 
@@ -46,6 +48,8 @@ class ArticleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityArticleBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        FlagBuilder.setHasSetCommentsList(false)
 
         // 呈现视图内容
         val articleHeadImageUriString = intent.getStringExtra("headImage") as String
@@ -66,7 +70,7 @@ class ArticleActivity : AppCompatActivity() {
         val Authorization = AuthorizationBuilder.getAuthorization()
 
         // 获取评论列表并呈现
-        setComments(articleId)
+        //setComments(articleId)
         commentListRecyclerView1 = CommentListRecyclerView1(parentCommentList, this@ArticleActivity, articleId)
         binding.commentRV.adapter = commentListRecyclerView1
         val layoutManager = LinearLayoutManager(this@ArticleActivity)
@@ -93,7 +97,7 @@ class ArticleActivity : AppCompatActivity() {
             val Anthorization = Authorization
             val statusValue = likeStatusValue
             val appService = ServiceCreator.create(LikeService::class.java)
-            val status = FormBody.Builder().add("status", statusValue).build()
+            val status = FormBody.Builder().add("status",statusValue).build()
             appService.like(id, Anthorization, status).enqueue(object : Callback<BaseResponse> {
                 override fun onResponse(
                     call: Call<BaseResponse>,
@@ -103,7 +107,7 @@ class ArticleActivity : AppCompatActivity() {
                     val code = back?.code
                     if (code == 200) {
                         // 图标变化 和 数字变化
-                        if (statusValue == "0") {
+                        if (statusValue == "1") {
                             // 点赞后的变化
                             binding.articleLike.setImageResource(R.drawable.img_liked)
                             val likes = binding.articleLikes.text.toString().toInt() + 1
@@ -145,12 +149,12 @@ class ArticleActivity : AppCompatActivity() {
                         val code = back?.code
                         if (code == 200) {
                             // 图标变化 和 数字变化
-                            if (statusValue == "0") {
-                                binding.articleLike.setImageResource(R.drawable.img_collected)
+                            if (statusValue == "1") {
+                                binding.articleCollect.setImageResource(R.drawable.img_collected)
                                 val collects = binding.articleCollects.text.toString().toInt() + 1
                                 binding.articleCollects.text = collects.toString()
                             } else {
-                                binding.articleLike.setImageResource(R.drawable.img_uncollected)
+                                binding.articleCollect.setImageResource(R.drawable.img_uncollected)
                                 val collects = binding.articleCollects.text.toString().toInt() - 1
                                 binding.articleCollects.text = collects.toString()
                             }

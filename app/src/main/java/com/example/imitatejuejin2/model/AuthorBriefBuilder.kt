@@ -34,6 +34,7 @@ object AuthorBriefBuilder {
                     if (back?.data != null) {
                         authorBrief = back.data
                         Log.d("head_image1", authorBrief.head_image)
+                        FlagBuilder.setHasSetAuthorBrief(true)
                     }
                 }
 
@@ -43,27 +44,27 @@ object AuthorBriefBuilder {
             })
     }
 
-    fun setAuthorBrief(Authorization: String, activity: LoginActivity, intent: Intent) {
-        ServiceCreator.create(GetMyInfoService::class.java)
-            .getMyInfoService(Authorization)
-            .enqueue(object : Callback<GetMyInfoResponse> {
-                override fun onResponse(
-                    call: Call<GetMyInfoResponse>,
-                    response: Response<GetMyInfoResponse>,
-                ) {
-                    val back = response.body()
-                    Log.d("a","a")
-                    Log.d("haed_image", "${back?.data?.head_image}")
-                    if (back?.data != null) {
-                        authorBrief = back.data
-                        Log.d("head_image1", authorBrief.head_image)
-                        activity.startActivity(intent)
-                    }
-                }
-
-                override fun onFailure(call: Call<GetMyInfoResponse>, t: Throwable) {
-                    t.printStackTrace()
-                }
-            })
-    }
+//    fun setAuthorBrief(Authorization: String, activity: LoginActivity, intent: Intent) {
+//        ServiceCreator.create(GetMyInfoService::class.java)
+//            .getMyInfoService(Authorization)
+//            .enqueue(object : Callback<GetMyInfoResponse> {
+//                override fun onResponse(
+//                    call: Call<GetMyInfoResponse>,
+//                    response: Response<GetMyInfoResponse>,
+//                ) {
+//                    val back = response.body()
+//                    Log.d("a","a")
+//                    Log.d("haed_image", "${back?.data?.head_image}")
+//                    if (back?.data != null) {
+//                        authorBrief = back.data
+//                        Log.d("head_image1", authorBrief.head_image)
+//                        //activity.startActivity(intent)
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<GetMyInfoResponse>, t: Throwable) {
+//                    t.printStackTrace()
+//                }
+//            })
+//    }
 }

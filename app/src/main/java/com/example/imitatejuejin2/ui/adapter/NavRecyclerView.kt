@@ -9,13 +9,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.imitatejuejin2.R
+import com.example.imitatejuejin2.ui.fragment.HeadFragment
 
 class NavRecyclerView(
     private val itemList: MutableList<String>,
     private val viewPager: ViewPager2
 ) : RecyclerView.Adapter<NavRecyclerView.ViewHolder>() {
-
-    private var currentPosition: Int = 0
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val itemText: TextView = view.findViewById(R.id.item_nav_head)
@@ -36,13 +35,13 @@ class NavRecyclerView(
         holder.itemText.text = item
         holder.itemText.setOnClickListener {
             viewPager.currentItem = holder.bindingAdapterPosition
-            currentPosition = position
+            HeadFragment.setCurrentPosition(position)
             notifyDataSetChanged()
         }
 //        holder.cursorView.visibility =
 //            if (currentPosition == position) View.VISIBLE
 //            else View.GONE
-        if (currentPosition == position) {
+        if (HeadFragment.getCurrentPosition() == position) {
             holder.itemText.setBackgroundResource(R.drawable.bg_nav_article_type_item_selected)
             holder.itemText.paint.isFakeBoldText = true
         } else {

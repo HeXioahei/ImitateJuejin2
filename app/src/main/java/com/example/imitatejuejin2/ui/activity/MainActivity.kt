@@ -14,6 +14,7 @@ import com.example.imitatejuejin2.databinding.ActivityMainBinding
 import com.example.imitatejuejin2.model.AuthorBrief
 import com.example.imitatejuejin2.model.AuthorBriefBuilder
 import com.example.imitatejuejin2.model.AuthorizationBuilder
+import com.example.imitatejuejin2.model.FlagBuilder
 import com.example.imitatejuejin2.model.ServiceCreator
 import com.example.imitatejuejin2.requestinterface.end.ExitService
 import com.example.imitatejuejin2.requestinterface.mine.EditUsernameService
@@ -54,6 +55,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        FlagBuilder.run {
+            setHasSetNewList(false)
+            setHasSetHotList(false)
+            setHasSetMyList(false)
+            setHasSetLikeList(false)
+            setHasSetCollectList(false)
+        }
 
 //        Authorization = "test "
 //        authorBrief = AuthorBrief("test1","test2")
