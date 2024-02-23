@@ -1,4 +1,4 @@
-package com.example.imitatejuejin2.model
+package com.example.imitatejuejin2.data
 
 class AuthorBrief (
     val head_image: String,

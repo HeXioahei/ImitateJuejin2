@@ -1,7 +1,9 @@
 package com.example.imitatejuejin2.ui.adapter
 
 import android.annotation.SuppressLint
+import android.graphics.BitmapFactory
 import android.os.Build
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +28,7 @@ import com.example.imitatejuejin2.model.ServiceCreator
 import com.example.imitatejuejin2.model.Time
 import com.example.imitatejuejin2.requestinterface.article.WriteCommentService
 import com.example.imitatejuejin2.requestinterface.mine.EditUsernameService
-import com.example.imitatejuejin2.response.BaseResponse
+import com.example.imitatejuejin2.data.response.BaseResponse
 import com.example.imitatejuejin2.ui.activity.ArticleActivity
 import com.example.imitatejuejin2.ui.activity.EditMyInfoActivity
 import retrofit2.Call
@@ -61,8 +63,9 @@ class CommentListRecyclerView1(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = parentCommentList[position]
         // 设置头像
-        val headImageUri = item.head_image.toUri()
-        Glide.with(activity).load(headImageUri).into(holder.headImage)
+        val decodedBytes = Base64.decode(item.head_image, Base64.DEFAULT)
+        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+        holder.headImage.setImageBitmap(bitmap)
 
         holder.userName.text = item.username
         holder.time.text = item.time

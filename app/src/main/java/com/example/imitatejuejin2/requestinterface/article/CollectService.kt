@@ -1,6 +1,6 @@
 package com.example.imitatejuejin2.requestinterface.article
 
-import com.example.imitatejuejin2.response.BaseResponse
+import com.example.imitatejuejin2.data.response.BaseResponse
 import okhttp3.FormBody
 import retrofit2.Call
 import retrofit2.http.Body
@@ -9,7 +9,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface CollectService {
-    @PUT("/articles/{id}/likes/")
+    @PUT("/articles/{id}/collections/")
     fun collect(
         @Path("id") id: String,
         @Header("Authorization") Anthorization: String,

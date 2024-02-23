@@ -1,6 +1,11 @@
 package com.example.imitatejuejin2.ui.activity
 
+import android.content.Context
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
@@ -16,21 +21,26 @@ import com.example.imitatejuejin2.databinding.EditPasswordBinding
 import com.example.imitatejuejin2.model.AuthorBriefBuilder
 import com.example.imitatejuejin2.model.AuthorizationBuilder
 import com.example.imitatejuejin2.model.HasChanged
+import com.example.imitatejuejin2.model.ReLogin
 import com.example.imitatejuejin2.model.ServiceCreator
 import com.example.imitatejuejin2.requestinterface.mine.EditHeadImageService
 import com.example.imitatejuejin2.requestinterface.mine.EditPasswordService
 import com.example.imitatejuejin2.requestinterface.mine.EditUsernameService
-import com.example.imitatejuejin2.response.BaseResponse
+import com.example.imitatejuejin2.data.response.BaseResponse
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 class EditMyInfoActivity : AppCompatActivity() {
 
     companion object {
         private lateinit var username: String
         private val Authorization: String = AuthorizationBuilder.getAuthorization()
-        private lateinit var headImageUriString: String
+        private lateinit var headImageString: String
     }
 
     private lateinit var binding: ActivityEditMyInfoBinding
@@ -42,8 +52,10 @@ class EditMyInfoActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         username = intent.getStringExtra("username") as String
-        headImageUriString = intent.getStringExtra("headImage") as String
-        Glide.with(this).load(headImageUriString.toUri()).into(binding.editHeadImageView)
+        headImageString = intent.getStringExtra("headImage") as String
+        val decodedBytes = Base64.decode(headImageString, Base64.DEFAULT)
+        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+        binding.editHeadImageView.setImageBitmap(bitmap)
         binding.editUsernameText.text = username
 
         // 返回
@@ -57,10 +69,13 @@ class EditMyInfoActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
                     Log.d("PhotoPicker", "Selected URI: $uri")
-//                    Glide.with(this).load(uri).into(binding.editHeadImageView)
+
+                    val headImageFile = getImageFileFromUri(this, uri)
+                    val requestBody = RequestBody.create(MediaType.parse("head_image"), headImageFile)
+                    val multipartBody = MultipartBody.Part.createFormData("head_image", headImageFile.name, requestBody) // 这里的name（”head_image“）必须和接口文档里定义的参数名字一样
 
                     val appService = ServiceCreator.create(EditHeadImageService::class.java)
-                    appService.editHeadImageService(uri.toString(), Authorization)
+                    appService.editHeadImageService(Authorization, multipartBody)
                         .enqueue(object : Callback<BaseResponse> {
                             override fun onResponse(
                                 call: Call<BaseResponse>,
@@ -143,13 +158,10 @@ class EditMyInfoActivity : AppCompatActivity() {
                         Log.d("usernameCode", code.toString())
                         if (code == 200) {
                             Toast.makeText(
-                                this@EditMyInfoActivity, "更改成功", Toast.LENGTH_SHORT
+                                this@EditMyInfoActivity, "更改成功\n请重新登录", Toast.LENGTH_SHORT
                             ).show()
-                            AuthorBriefBuilder.setAuthorBrief(Authorization)
-                            HasChanged.setUsernameHasChangedValue(true)
-                            username = inputText
-                            binding.editUsernameText.text = username
-                            dialog.dismiss()
+                            ReLogin.setIsReLogin(true)
+                            finish()
                         } else {
                             Toast.makeText(
                                 this@EditMyInfoActivity, "更改失败", Toast.LENGTH_SHORT
@@ -192,11 +204,10 @@ class EditMyInfoActivity : AppCompatActivity() {
                         Log.d("passmsg", back?.msg.toString())
                         if (code == 200) {
                             Toast.makeText(
-                                this@EditMyInfoActivity, "更改成功", Toast.LENGTH_SHORT
+                                this@EditMyInfoActivity, "更改成功\n请重新登录", Toast.LENGTH_SHORT
                             ).show()
-                            AuthorBriefBuilder.setAuthorBrief(Authorization)
-                            HasChanged.setPasswordHasChangedValue(true)
-                            dialog.dismiss()
+                            ReLogin.setIsReLogin(true)
+                            finish()
                         } else {
                             Toast.makeText(
                                 this@EditMyInfoActivity, "更改失败，请检查原密码是否正确", Toast.LENGTH_SHORT
@@ -215,5 +226,25 @@ class EditMyInfoActivity : AppCompatActivity() {
         }
 
         alertDialogBuilder.show()
+    }
+
+    /**
+     * 将图片由 uri 转换为 file
+     */
+    private fun getImageFileFromUri(context: Context, imageUri: Uri): File {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = context.contentResolver.query(imageUri, projection, null, null, null)
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                val imagePath = cursor.getString(columnIndex)
+                cursor.close()
+                return File(imagePath)
+            }
+            cursor.close()
+        }
+
+        return File("")
     }
 }

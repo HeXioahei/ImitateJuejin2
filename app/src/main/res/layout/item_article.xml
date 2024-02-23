@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_article"
     android:layout_width="match_parent"
-    android:layout_height="180dp">
+    android:paddingStart="7dp"
+    android:paddingEnd="7dp"
+    android:layout_height="180dp"
+    android:background="#ffffffff">
 
     <TextView
         android:id="@+id/itemTitle"
@@ -14,7 +17,7 @@
         android:fontFamily="@font/font1"
         android:maxLines="1"
         android:text="测试aaaaaaaaaaaaaaa啊啊啊啊啊啊啊啊"
-        android:textSize="27sp"
+        android:textSize="25sp"
         app:layout_constraintTop_toTopOf="parent" />
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -48,14 +51,14 @@
 
     <TextView
         android:id="@+id/itemContent"
-        android:layout_width="match_parent"
+        android:layout_width="240dp"
         android:layout_height="60dp"
         android:ellipsize="end"
         android:maxLines="3"
         android:text="测试啊啊啊啊啊啊\n啊啊啊啊啊啊啊\n啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemHeadImage"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="70dp" />
+        tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/itemHit"
@@ -122,6 +125,24 @@
         app:layout_constraintStart_toEndOf="@+id/itemCollect"
         app:layout_constraintTop_toBottomOf="@+id/itemContent"
         tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/img_app_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/itemTime"
+        app:layout_constraintTop_toBottomOf="@+id/itemTitle" />
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="2dp"
+        android:background="@color/shadow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/itemCollect"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline24"

@@ -19,7 +19,7 @@ import com.example.imitatejuejin2.model.MarkdownText
 import com.example.imitatejuejin2.model.ServiceCreator
 import com.example.imitatejuejin2.model.Time
 import com.example.imitatejuejin2.requestinterface.write.WriteArticleService
-import com.example.imitatejuejin2.response.BaseResponse
+import com.example.imitatejuejin2.data.response.BaseResponse
 import com.example.imitatejuejin2.ui.activity.MainActivity
 import retrofit2.Call
 import retrofit2.Callback

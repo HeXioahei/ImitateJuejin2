@@ -1,9 +1,11 @@
 package com.example.imitatejuejin2.ui.activity
 
 import android.annotation.SuppressLint
+import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.widget.EditText
 import androidx.annotation.RequiresApi
@@ -26,8 +28,8 @@ import com.example.imitatejuejin2.requestinterface.article.CollectService
 import com.example.imitatejuejin2.requestinterface.article.GetCommentsService
 import com.example.imitatejuejin2.requestinterface.article.LikeService
 import com.example.imitatejuejin2.requestinterface.article.WriteCommentService
-import com.example.imitatejuejin2.response.BaseResponse
-import com.example.imitatejuejin2.response.GetCommentsResponse
+import com.example.imitatejuejin2.data.response.BaseResponse
+import com.example.imitatejuejin2.data.response.GetCommentsResponse
 import com.example.imitatejuejin2.ui.adapter.CommentListRecyclerView1
 import okhttp3.FormBody
 import retrofit2.Call
@@ -52,9 +54,12 @@ class ArticleActivity : AppCompatActivity() {
 
         // 呈现视图内容
         val articleHeadImageUriString = intent.getStringExtra("headImage") as String
-        Glide.with(this).load(articleHeadImageUriString.toUri()).into(binding.articleHeadImage)
+        val decodedBytes = Base64.decode(articleHeadImageUriString, Base64.DEFAULT)
+        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+        binding.articleHeadImage.setImageBitmap(bitmap)
         binding.articleUsername.text = intent.getStringExtra("username") as String
         binding.articleTitle.text = intent.getStringExtra("title") as String
+        binding.articleTime.text = intent.getStringExtra("time") as String
 
         val content = intent.getStringExtra("content") as String
         MarkdownText.setMarkdownText(binding.articleContent, content, this)

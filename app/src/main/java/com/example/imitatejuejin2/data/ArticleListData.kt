@@ -1,9 +1,5 @@
 package com.example.imitatejuejin2.data
 
-import com.example.imitatejuejin2.model.Article
-import com.example.imitatejuejin2.model.AuthorBrief
-import com.example.imitatejuejin2.model.Time
-
 class ArticleListData (
     val title: String,
     val content: String,

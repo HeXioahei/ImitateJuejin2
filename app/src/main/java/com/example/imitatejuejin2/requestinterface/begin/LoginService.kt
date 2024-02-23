@@ -1,6 +1,6 @@
 package com.example.imitatejuejin2.requestinterface.begin
 
-import com.example.imitatejuejin2.response.LoginResponse
+import com.example.imitatejuejin2.data.response.LoginResponse
 import retrofit2.Call
 import retrofit2.http.POST
 import retrofit2.http.Query

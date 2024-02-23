@@ -1,11 +1,9 @@
 package com.example.imitatejuejin2.model
 
-import android.content.Intent
 import android.util.Log
+import com.example.imitatejuejin2.data.AuthorBrief
 import com.example.imitatejuejin2.requestinterface.mine.GetMyInfoService
-import com.example.imitatejuejin2.response.GetMyInfoResponse
-import com.example.imitatejuejin2.ui.activity.LoginActivity
-import com.example.imitatejuejin2.ui.activity.MainActivity
+import com.example.imitatejuejin2.data.response.GetMyInfoResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,6 +29,7 @@ object AuthorBriefBuilder {
                     val back = response.body()
                     Log.d("a","a")
                     Log.d("haed_image", "${back?.data?.head_image}")
+                    Log.d("username", "${back?.data?.username}")
                     if (back?.data != null) {
                         authorBrief = back.data
                         Log.d("head_image1", authorBrief.head_image)
@@ -43,28 +42,4 @@ object AuthorBriefBuilder {
                 }
             })
     }
-
-//    fun setAuthorBrief(Authorization: String, activity: LoginActivity, intent: Intent) {
-//        ServiceCreator.create(GetMyInfoService::class.java)
-//            .getMyInfoService(Authorization)
-//            .enqueue(object : Callback<GetMyInfoResponse> {
-//                override fun onResponse(
-//                    call: Call<GetMyInfoResponse>,
-//                    response: Response<GetMyInfoResponse>,
-//                ) {
-//                    val back = response.body()
-//                    Log.d("a","a")
-//                    Log.d("haed_image", "${back?.data?.head_image}")
-//                    if (back?.data != null) {
-//                        authorBrief = back.data
-//                        Log.d("head_image1", authorBrief.head_image)
-//                        //activity.startActivity(intent)
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<GetMyInfoResponse>, t: Throwable) {
-//                    t.printStackTrace()
-//                }
-//            })
-//    }
 }

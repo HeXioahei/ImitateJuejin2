@@ -3,7 +3,7 @@ package com.example.imitatejuejin2.model
 import android.util.Log
 import com.example.imitatejuejin2.data.GetCommentsData
 import com.example.imitatejuejin2.requestinterface.article.GetCommentsService
-import com.example.imitatejuejin2.response.GetCommentsResponse
+import com.example.imitatejuejin2.data.response.GetCommentsResponse
 import com.example.imitatejuejin2.ui.activity.ArticleActivity
 import retrofit2.Call
 import retrofit2.Callback

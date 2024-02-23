@@ -2,33 +2,34 @@ package com.example.imitatejuejin2.ui.fragment
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
-import com.bumptech.glide.Glide
 import com.example.imitatejuejin2.ui.adapter.ArticleTypeViewPager
 import com.example.imitatejuejin2.ui.adapter.NavRecyclerView
 import com.example.imitatejuejin2.databinding.FragmentMineBinding
-import com.example.imitatejuejin2.model.Article
+import com.example.imitatejuejin2.data.Article
 import com.example.imitatejuejin2.model.ArticleList
 import com.example.imitatejuejin2.model.AuthorBriefBuilder
-import com.example.imitatejuejin2.model.AuthorizationBuilder
 import com.example.imitatejuejin2.model.HasChanged
 import com.example.imitatejuejin2.model.LittleNav
 import com.example.imitatejuejin2.ui.activity.EditMyInfoActivity
 import com.example.imitatejuejin2.ui.activity.MainActivity
 
+/**
+ * 个人页
+ */
 class MineFragment : Fragment() {
 
     private lateinit var binding: FragmentMineBinding
     private lateinit var navRecyclerView: NavRecyclerView
     private lateinit var articleTypeViewPager: ArticleTypeViewPager
-    private val Authorization = AuthorizationBuilder.getAuthorization()
     private var outerList: MutableList<MutableList<Article>> =
         mutableListOf(
             ArticleList.getMyList(),
@@ -40,39 +41,54 @@ class MineFragment : Fragment() {
             ArticleList.getBlankList()
         )
 
+    // 定义一个内部单例类，来控制文章导航栏的当前页面位置
+    companion object X {
+        private var currentPosition = 0
+        fun getCurrentPosition(): Int {
+            return currentPosition
+        }
+
+        fun setCurrentPosition(value: Int) {
+            currentPosition = value
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentMineBinding.inflate(inflater, container, false)
+
         // 获取 Activity
         val mainActivity: MainActivity
         if (activity != null) {
             mainActivity = activity as MainActivity
-            // val Authorization = AuthorizationBuilder.getAuthorization()
+
             val authorBrief = AuthorBriefBuilder.getAuthorBrief()
 
+            // 设置用户名
             binding.myUsername.text = authorBrief.username
-
             // 设置头像
-            val headImageUri = authorBrief.head_image.toUri()
-            Glide.with(this).load(headImageUri).into(binding.myHeadImage)
-
-            navRecyclerView = NavRecyclerView(LittleNav.createMyInfoNav(), binding.myListContent)
+            val myHeadImageString = authorBrief.head_image
+            val decodedBytes = Base64.decode(myHeadImageString, Base64.DEFAULT)
+            val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+            binding.myHeadImage.setImageBitmap(bitmap)
+            // 设置文章导航栏
+            navRecyclerView = NavRecyclerView(LittleNav.createMyInfoNav(), binding.myListContent, this)
             binding.myListGuide.adapter = navRecyclerView
-            articleTypeViewPager = ArticleTypeViewPager(outerList, mainActivity, authorBrief.username)
-            binding.myListContent.adapter = articleTypeViewPager
-
             val layoutInflater = LinearLayoutManager(mainActivity)
             layoutInflater.orientation = LinearLayoutManager.HORIZONTAL
             binding.myListGuide.layoutManager = layoutInflater
-
-
-
+            // 设置文章列表
+            articleTypeViewPager = ArticleTypeViewPager(outerList, mainActivity, authorBrief.username)
+            binding.myListContent.adapter = articleTypeViewPager
 
             binding.myListContent.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                @SuppressLint("NotifyDataSetChanged")
                 override fun onPageSelected(position: Int) {
+                    setCurrentPosition(position)
                     binding.myListGuide.scrollToPosition(position)
+                    navRecyclerView.notifyDataSetChanged()
                 }
             })
 
@@ -87,10 +103,13 @@ class MineFragment : Fragment() {
         return binding.root
     }
 
-    // 刷新列表
+    /**
+     * 刷新列表与个人信息
+     */
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
+        // 刷新列表
         val articlesItemHasChangedValue2 = HasChanged.getArticlesItemHasChangedValue2()
         if (articlesItemHasChangedValue2) {
             val newOuterList: MutableList<MutableList<Article>> =
@@ -106,18 +125,18 @@ class MineFragment : Fragment() {
             outerList.clear()
             outerList.addAll(newOuterList)
 
-            // 外部 notify
+            // notify
             articleTypeViewPager.notifyDataSetChanged()
             HasChanged.setArticlesItemHasChangedValue2(false)
         }
+
+        // 刷新个人信息
         val newAuthorBrief = AuthorBriefBuilder.getAuthorBrief()
-        if (HasChanged.getUsernameHasChangedValue()) {
-            binding.myUsername.text = newAuthorBrief.username
-            HasChanged.setUsernameHasChangedValue(false)
-        }
         if (HasChanged.getHeadImageHasChangedValue()) {
-            val headImageUri = newAuthorBrief.head_image.toUri()
-            Glide.with(this).load(headImageUri).into(binding.myHeadImage)
+            val headImageString = newAuthorBrief.head_image
+            val decodedBytes = Base64.decode(headImageString, Base64.DEFAULT)
+            val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+            binding.myHeadImage.setImageBitmap(bitmap)
             HasChanged.setHeadImageHasChangedValue(false)
         }
     }

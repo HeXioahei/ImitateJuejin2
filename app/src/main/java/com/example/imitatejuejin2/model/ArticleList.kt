@@ -1,12 +1,13 @@
 package com.example.imitatejuejin2.model
 
 import android.util.Log
+import com.example.imitatejuejin2.data.Article
 import com.example.imitatejuejin2.requestinterface.mine.GetCollectArticleListService
 import com.example.imitatejuejin2.requestinterface.head.GetHotArticleListService
 import com.example.imitatejuejin2.requestinterface.mine.GetLikesArticleListService
 import com.example.imitatejuejin2.requestinterface.mine.GetMyArticleListService
 import com.example.imitatejuejin2.requestinterface.head.GetNewArticleListService
-import com.example.imitatejuejin2.response.GetArticleListResponse
+import com.example.imitatejuejin2.data.response.GetArticleListResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

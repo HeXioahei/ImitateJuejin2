@@ -1,4 +1,4 @@
-package com.example.imitatejuejin2.response
+package com.example.imitatejuejin2.data.response
 
 import com.example.imitatejuejin2.data.GetCommentsData
 

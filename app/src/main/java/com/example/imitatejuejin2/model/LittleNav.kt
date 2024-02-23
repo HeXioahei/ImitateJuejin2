@@ -14,8 +14,8 @@ object LittleNav {
 
     fun createMyInfoNav(): MutableList<String> {
         val item1 = "我的"
-        val item2 = "收藏"
-        val item3 = "点赞"
+        val item2 = "点赞"
+        val item3 = "收藏"
         val item4 = "还未"
         val item5 = "开通"
         val item6 = "敬请"

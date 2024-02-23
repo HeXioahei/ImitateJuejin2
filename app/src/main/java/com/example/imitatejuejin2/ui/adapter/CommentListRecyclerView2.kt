@@ -1,14 +1,14 @@
 package com.example.imitatejuejin2.ui.adapter
 
+import android.graphics.BitmapFactory
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.imitatejuejin2.databinding.ItemKidCommentsBinding
-import com.example.imitatejuejin2.model.KidComments
+import com.example.imitatejuejin2.data.KidComments
 import com.example.imitatejuejin2.ui.activity.ArticleActivity
 
 class CommentListRecyclerView2 (
@@ -36,8 +36,9 @@ class CommentListRecyclerView2 (
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = kidCommentList[position]
         // 设置头像
-        val headImageUri = item.head_image.toUri()
-        Glide.with(activity).load(headImageUri).into(holder.headImage)
+        val decodedBytes = Base64.decode(item.head_image, Base64.DEFAULT)
+        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+        holder.headImage.setImageBitmap(bitmap)
 
         holder.userName.text = item.username
         holder.time.text = item.time

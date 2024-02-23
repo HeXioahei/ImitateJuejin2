@@ -1,35 +1,34 @@
 package com.example.imitatejuejin2.ui.fragment
 
 import android.annotation.SuppressLint
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
-import com.bumptech.glide.Glide
 import com.example.imitatejuejin2.ui.adapter.ArticleTypeViewPager
 import com.example.imitatejuejin2.ui.adapter.NavRecyclerView
 import com.example.imitatejuejin2.databinding.FragmentHeadBinding
-import com.example.imitatejuejin2.model.Article
+import com.example.imitatejuejin2.data.Article
 import com.example.imitatejuejin2.model.ArticleList
 import com.example.imitatejuejin2.model.AuthorBriefBuilder
-import com.example.imitatejuejin2.model.AuthorizationBuilder
 import com.example.imitatejuejin2.model.HasChanged
 import com.example.imitatejuejin2.model.LittleNav
 import com.example.imitatejuejin2.ui.activity.MainActivity
 
+/**
+ * 首页
+ */
 class HeadFragment : Fragment() {
 
-    private var hasPaused = false
     private lateinit var binding: FragmentHeadBinding
     private lateinit var navRecyclerView: NavRecyclerView
     private lateinit var articleTypeViewPager: ArticleTypeViewPager
-    private val Authorization = AuthorizationBuilder.getAuthorization()
-    private val authorBrief = AuthorBriefBuilder.getAuthorBrief()
     private var outerList: MutableList<MutableList<Article>> =
         mutableListOf(
             ArticleList.getNewList(),
@@ -40,6 +39,8 @@ class HeadFragment : Fragment() {
             ArticleList.getBlankList(),
             ArticleList.getBlankList()
         )
+
+    // 定义一个内部单例类，来控制文章导航栏的当前页面位置
     companion object {
         private var currentPosition = 0
             fun getCurrentPosition(): Int {
@@ -56,49 +57,40 @@ class HeadFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
 
-        Log.d("newListSize", outerList.size.toString())
-        // Log.d("newList1111", outerList[1][1].author.username)
-
-
+        Log.d("onCreateView", "onCreateView")
         binding = FragmentHeadBinding.inflate(inflater, container, false)
 
-        Log.d("Authorization", Authorization)
+        Log.d("newListSize", outerList.size.toString())
+        Log.d("newList1111", outerList[1][1].author.username)
+
         // 获取 Activity
         val mainActivity: MainActivity
         if (activity != null) {
             mainActivity = activity as MainActivity
-            //val authorBrief: AuthorBrief = AuthorBriefBuilder.getAuthorBrief()
             Log.d("fragment","fragment")
 
-            // 设置右上角的头像
-            val myHeadImageUriString = authorBrief.head_image
-            Log.d("myHeadImageUriString", myHeadImageUriString)
-            val myHeadImageUri = myHeadImageUriString.toUri()
-            Glide.with(this).load(myHeadImageUri).into(binding.headMyHeadImage)
+            val authorBrief = AuthorBriefBuilder.getAuthorBrief()
 
-            // 获取列表
-//            val outerList: MutableList<MutableList<Article>> =
-//                mutableListOf(
-//                    ArticleList.createNewArticleList(Authorization),
-//                    ArticleList.createHotArticleList(Authorization),
-//                    ArticleList.createBlankList(),
-//                    ArticleList.createBlankList(),
-//                    ArticleList.createBlankList(),
-//                    ArticleList.createBlankList(),
-//                    ArticleList.createBlankList(),
-//                )
+            // 解析Base64编码，设置右上角的头像
+            val myHeadImageString = authorBrief.head_image
+            Log.d("myHeadImageUriString", myHeadImageString)
+            val decodedBytes = Base64.decode(myHeadImageString, Base64.DEFAULT)
+            val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+            binding.headMyHeadImage.setImageBitmap(bitmap)
 
+            // 设置文章类型的导航栏
             val articleTypeNav = LittleNav.createArticleTypeNav()
-            navRecyclerView = NavRecyclerView(articleTypeNav, binding.listContent)
+            navRecyclerView = NavRecyclerView(articleTypeNav, binding.listContent, this)
             binding.articlesGuide.adapter = navRecyclerView
-
-            articleTypeViewPager = ArticleTypeViewPager(outerList, mainActivity, authorBrief.username)
-            binding.listContent.adapter = articleTypeViewPager
-
             val layoutInflater = LinearLayoutManager(activity)
             layoutInflater.orientation = LinearLayoutManager.HORIZONTAL
             binding.articlesGuide.layoutManager = layoutInflater
 
+            // 用 ViewPager2 展示文章列表
+            articleTypeViewPager = ArticleTypeViewPager(outerList, mainActivity, authorBrief.username)
+            binding.listContent.adapter = articleTypeViewPager
+
+            // ViewPager2 的 item 变化，导航栏跟着变化，导航栏的光标也跟着变化
             binding.listContent.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 @SuppressLint("NotifyDataSetChanged")
                 override fun onPageSelected(position: Int) {
@@ -110,15 +102,16 @@ class HeadFragment : Fragment() {
         }
         return binding.root
     }
-    override fun onPause() {
-        super.onPause()
-        hasPaused = true
-    }
-    // 刷新列表
+
+    /**
+     * 重写 onResume 方法，来实现刷新的列表的功能
+     */
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
+        // 用一个变量来表示列表是否已经发生改变
         val articlesItemHasChangedValue1 = HasChanged.getArticlesItemHasChangedValue1()
+        // 若已经改变，就进行刷新
         if (articlesItemHasChangedValue1) {
             val newOuterList: MutableList<MutableList<Article>> =
                 mutableListOf(
@@ -133,8 +126,9 @@ class HeadFragment : Fragment() {
             outerList.clear()
             outerList.addAll(newOuterList)
 
-            // 外部 notify
+            // notify
             articleTypeViewPager.notifyDataSetChanged()
+            // 将表示列表是否已经发生改变的值设置会 false，表示未改变
             HasChanged.setArticlesItemHasChangedValue1(false)
         }
     }

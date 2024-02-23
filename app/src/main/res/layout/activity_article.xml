@@ -93,10 +93,9 @@
             <TextView
                 android:id="@+id/articleTime"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:textColor="#808080"
+                android:layout_height="wrap_content"
                 android:text="1010"
-                android:textSize="15sp"/>
+                android:textColor="#808080" />
 
             <TextView
                 android:id="@+id/articleContent"
@@ -183,7 +182,7 @@
             android:id="@+id/articleCollects"
             android:layout_width="30dp"
             android:layout_height="20dp"
-            android:gravity="center"
+            android:gravity="bottom"
             android:text="1024"
             android:textColor="#808080"
             android:textSize="10sp"

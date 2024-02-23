@@ -1,6 +1,8 @@
 package com.example.imitatejuejin2.ui.adapter
 
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,12 +11,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.imitatejuejin2.R
 import com.example.imitatejuejin2.databinding.ItemArticleBinding
-import com.example.imitatejuejin2.model.Article
+import com.example.imitatejuejin2.data.Article
 import com.example.imitatejuejin2.model.ArticleList
 import com.example.imitatejuejin2.model.AuthorizationBuilder
 import com.example.imitatejuejin2.model.CommentsList
@@ -24,7 +24,7 @@ import com.example.imitatejuejin2.model.MarkdownText
 import com.example.imitatejuejin2.model.ServiceCreator
 import com.example.imitatejuejin2.requestinterface.article.HitService
 import com.example.imitatejuejin2.requestinterface.mine.DeleteArticleService
-import com.example.imitatejuejin2.response.BaseResponse
+import com.example.imitatejuejin2.data.response.BaseResponse
 import com.example.imitatejuejin2.ui.activity.ArticleActivity
 import com.example.imitatejuejin2.ui.activity.MainActivity
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -71,7 +71,11 @@ class ArticleListRecyclerView(
         val item = list[position]
         Log.d("recyclerView2", "recyclerView2")
         holder.title.text = item.title
-        Glide.with(activity).load(item.author.head_image.toUri()).into(holder.headImage)
+
+        val decodedBytes = Base64.decode(item.author.head_image, Base64.DEFAULT)
+        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+        holder.headImage.setImageBitmap(bitmap)
+
         holder.username.text = item.author.username
         holder.time.text = item.time
         val contentString = item.content
@@ -101,6 +105,7 @@ class ArticleListRecyclerView(
                 putExtra("collects", item.collects.toString())
                 putExtra("comments", item.comments.toString())
                 putExtra("id", item.id.toString())
+                putExtra("time", item.time)
             }
 
             // 点击量更新

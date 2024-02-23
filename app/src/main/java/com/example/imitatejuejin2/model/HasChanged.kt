@@ -5,8 +5,6 @@ object HasChanged {
     private var articlesItemHasChangedValue2 = false
     private var commentsItemHasChangedValue = false
     private var headImageHasChangedValue = false
-    private var usernameHasChangedValue = false
-    private var passwordHasChangedValue = false
 
     fun getArticlesItemHasChangedValue1(): Boolean {
         return articlesItemHasChangedValue1
@@ -40,19 +38,4 @@ object HasChanged {
         headImageHasChangedValue = headImageHasChangedValue2
     }
 
-    fun getUsernameHasChangedValue(): Boolean {
-        return usernameHasChangedValue
-    }
-
-    fun setUsernameHasChangedValue(usernameHasChangedValue2: Boolean) {
-        usernameHasChangedValue = usernameHasChangedValue2
-    }
-
-    fun getPasswordHasChangedValue(): Boolean {
-        return passwordHasChangedValue
-    }
-
-    fun setPasswordHasChangedValue(passwordHasChangedValue2: Boolean) {
-        passwordHasChangedValue = passwordHasChangedValue2
-    }
 }

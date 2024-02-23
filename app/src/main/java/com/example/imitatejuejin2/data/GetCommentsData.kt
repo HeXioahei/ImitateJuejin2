@@ -1,7 +1,5 @@
 package com.example.imitatejuejin2.data
 
-import com.example.imitatejuejin2.model.KidComments
-
 class GetCommentsData (
     val head_image: String,
     val username: String,

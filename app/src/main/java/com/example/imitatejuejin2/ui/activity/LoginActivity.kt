@@ -12,7 +12,7 @@ import com.example.imitatejuejin2.model.AuthorizationBuilder
 import com.example.imitatejuejin2.model.FlagBuilder
 import com.example.imitatejuejin2.model.ServiceCreator
 import com.example.imitatejuejin2.requestinterface.begin.LoginService
-import com.example.imitatejuejin2.response.LoginResponse
+import com.example.imitatejuejin2.data.response.LoginResponse
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -43,6 +43,7 @@ class LoginActivity : AppCompatActivity() {
             val loginUsername = binding.loginUsername.text.toString()
             val loginPassword = binding.loginPassword.text.toString()
 
+            // 进行登录的网络请求，得到两个token
             ServiceCreator.create(LoginService::class.java)
                 .login(loginUsername, loginPassword)
                 .enqueue(object : Callback<LoginResponse> {
@@ -53,16 +54,19 @@ class LoginActivity : AppCompatActivity() {
                         val back = response.body()
                         val code = back?.code
                         val Authorization = back?.access_token
+                        val AuthorizationRefresh = back?.refresh_token
                         Log.d("code", "$code")
                         Log.d("Authorization", Authorization.toString())
                         if (code == 200 && Authorization != null) {
                             val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                            // 初始化 Authorization
                             AuthorizationBuilder.setAuthorization(Authorization)
+                            AuthorizationBuilder.setAuthorizationRefresh2(AuthorizationRefresh)
                             Log.d("Authorization2", AuthorizationBuilder.getAuthorization())
 
                             GlobalScope.launch {
                                 try {
-                                    // 假设你有多个网络请求需要执行
+                                    // 同时执行多个网络请求
                                     ArticleList.createNewArticleList(Authorization)
                                     ArticleList.createHotArticleList(Authorization)
                                     ArticleList.createMyArticleList(Authorization)
@@ -70,6 +74,7 @@ class LoginActivity : AppCompatActivity() {
                                     ArticleList.createCollectArticleList(Authorization)
                                     AuthorBriefBuilder.setAuthorBrief(Authorization)
 
+                                    // 检查是否数据都初始化完毕
                                     while (true) {
                                         Log.d("FlagBuilder.getHasSetAuthorBrief()", FlagBuilder.getHasSetAuthorBrief().toString())
                                         Log.d("FlagBuilder.getHasSetNewList()", FlagBuilder.getHasSetNewList().toString())
@@ -77,6 +82,8 @@ class LoginActivity : AppCompatActivity() {
                                         Log.d("FlagBuilder.getHasSetMyList()", FlagBuilder.getHasSetMyList().toString())
                                         Log.d("FlagBuilder.getHasSetLikeList()", FlagBuilder.getHasSetLikeList().toString())
                                         Log.d("FlagBuilder.getHasSetCollectList()", FlagBuilder.getHasSetCollectList().toString())
+
+                                        // 直到所有数据都初始化完毕，再进入首页
                                         if (
                                             FlagBuilder.getHasSetAuthorBrief()
                                             && FlagBuilder.getHasSetNewList()
@@ -86,6 +93,7 @@ class LoginActivity : AppCompatActivity() {
                                             && FlagBuilder.getHasSetCollectList()
                                         ) {
                                             Log.d("intent", "intent")
+                                            // 跳转到首页
                                             startActivity(intent)
                                             Toast.makeText(
                                                 this@LoginActivity,
@@ -94,12 +102,12 @@ class LoginActivity : AppCompatActivity() {
                                             ).show()
                                             break
                                         }
+                                        // 设置每次检查的时间间隔
                                         withContext(Dispatchers.IO) {
                                             Thread.sleep(500L)
                                         }
                                     }
                                 } catch (e: Exception) {
-                                    // 处理任何异常
                                     e.printStackTrace()
                                 }
                             }

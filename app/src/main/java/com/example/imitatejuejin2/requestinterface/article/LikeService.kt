@@ -1,6 +1,6 @@
 package com.example.imitatejuejin2.requestinterface.article
 
-import com.example.imitatejuejin2.response.BaseResponse
+import com.example.imitatejuejin2.data.response.BaseResponse
 import okhttp3.FormBody
 import retrofit2.Call
 import retrofit2.http.Body
