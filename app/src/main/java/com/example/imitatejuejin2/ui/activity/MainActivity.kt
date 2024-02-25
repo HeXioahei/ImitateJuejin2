@@ -9,7 +9,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.imitatejuejin2.R
 import com.example.imitatejuejin2.databinding.ActivityMainBinding
 import com.example.imitatejuejin2.model.AuthorizationBuilder
-import com.example.imitatejuejin2.model.FlagBuilder
+import com.example.imitatejuejin2.model.Flag
 import com.example.imitatejuejin2.model.ReLogin
 import com.example.imitatejuejin2.model.ServiceCreator
 import com.example.imitatejuejin2.requestinterface.end.ExitService
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         val Authorization = AuthorizationBuilder.getAuthorization()
 
         // 重新标记列表的初始化情况，将其标记为未初始化，方便更新操作
-        FlagBuilder.run {
+        Flag.run {
             setHasSetNewList(false)
             setHasSetHotList(false)
             setHasSetMyList(false)

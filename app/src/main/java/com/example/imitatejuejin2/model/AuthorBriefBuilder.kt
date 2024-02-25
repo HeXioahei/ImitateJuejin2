@@ -1,7 +1,7 @@
 package com.example.imitatejuejin2.model
 
 import android.util.Log
-import com.example.imitatejuejin2.data.AuthorBrief
+import com.example.imitatejuejin2.data.basedata.AuthorBrief
 import com.example.imitatejuejin2.requestinterface.mine.GetMyInfoService
 import com.example.imitatejuejin2.data.response.GetMyInfoResponse
 import retrofit2.Call
@@ -33,7 +33,7 @@ object AuthorBriefBuilder {
                     if (back?.data != null) {
                         authorBrief = back.data
                         Log.d("head_image1", authorBrief.head_image)
-                        FlagBuilder.setHasSetAuthorBrief(true)
+                        Flag.setHasSetAuthorBrief(true)
                     }
                 }
 

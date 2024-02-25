@@ -14,11 +14,11 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.imitatejuejin2.ui.adapter.ArticleTypeViewPager
 import com.example.imitatejuejin2.ui.adapter.NavRecyclerView
 import com.example.imitatejuejin2.databinding.FragmentMineBinding
-import com.example.imitatejuejin2.data.Article
-import com.example.imitatejuejin2.model.ArticleList
+import com.example.imitatejuejin2.data.basedata.Article
+import com.example.imitatejuejin2.model.ArticleListBuilder
 import com.example.imitatejuejin2.model.AuthorBriefBuilder
 import com.example.imitatejuejin2.model.HasChanged
-import com.example.imitatejuejin2.model.LittleNav
+import com.example.imitatejuejin2.model.LittleNavBuilder
 import com.example.imitatejuejin2.ui.activity.EditMyInfoActivity
 import com.example.imitatejuejin2.ui.activity.MainActivity
 
@@ -32,13 +32,13 @@ class MineFragment : Fragment() {
     private lateinit var articleTypeViewPager: ArticleTypeViewPager
     private var outerList: MutableList<MutableList<Article>> =
         mutableListOf(
-            ArticleList.getMyList(),
-            ArticleList.getLikeList(),
-            ArticleList.getCollectList(),
-            ArticleList.getBlankList(),
-            ArticleList.getBlankList(),
-            ArticleList.getBlankList(),
-            ArticleList.getBlankList()
+            ArticleListBuilder.getMyList(),
+            ArticleListBuilder.getLikeList(),
+            ArticleListBuilder.getCollectList(),
+            ArticleListBuilder.getBlankList(),
+            ArticleListBuilder.getBlankList(),
+            ArticleListBuilder.getBlankList(),
+            ArticleListBuilder.getBlankList()
         )
 
     // 定义一个内部单例类，来控制文章导航栏的当前页面位置
@@ -74,7 +74,7 @@ class MineFragment : Fragment() {
             val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
             binding.myHeadImage.setImageBitmap(bitmap)
             // 设置文章导航栏
-            navRecyclerView = NavRecyclerView(LittleNav.createMyInfoNav(), binding.myListContent, this)
+            navRecyclerView = NavRecyclerView(LittleNavBuilder.createMyInfoNav(), binding.myListContent, this)
             binding.myListGuide.adapter = navRecyclerView
             val layoutInflater = LinearLayoutManager(mainActivity)
             layoutInflater.orientation = LinearLayoutManager.HORIZONTAL
@@ -114,13 +114,13 @@ class MineFragment : Fragment() {
         if (articlesItemHasChangedValue2) {
             val newOuterList: MutableList<MutableList<Article>> =
                 mutableListOf(
-                    ArticleList.getMyList(),
-                    ArticleList.getLikeList(),
-                    ArticleList.getCollectList(),
-                    ArticleList.getBlankList(),
-                    ArticleList.getBlankList(),
-                    ArticleList.getBlankList(),
-                    ArticleList.getBlankList()
+                    ArticleListBuilder.getMyList(),
+                    ArticleListBuilder.getLikeList(),
+                    ArticleListBuilder.getCollectList(),
+                    ArticleListBuilder.getBlankList(),
+                    ArticleListBuilder.getBlankList(),
+                    ArticleListBuilder.getBlankList(),
+                    ArticleListBuilder.getBlankList()
                 )
             outerList.clear()
             outerList.addAll(newOuterList)

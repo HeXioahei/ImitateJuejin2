@@ -6,31 +6,23 @@ import android.os.Build
 import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.example.imitatejuejin2.R
-import com.example.imitatejuejin2.data.GetCommentsData
+import com.example.imitatejuejin2.data.basedata.GetCommentsData
 import com.example.imitatejuejin2.databinding.ItemParentCommentsBinding
 import com.example.imitatejuejin2.model.AuthorizationBuilder
-import com.example.imitatejuejin2.model.CommentsList
-import com.example.imitatejuejin2.model.HasChanged
+import com.example.imitatejuejin2.model.CommentsListBuilder
 import com.example.imitatejuejin2.model.ServiceCreator
-import com.example.imitatejuejin2.model.Time
+import com.example.imitatejuejin2.model.TimeBuilder
 import com.example.imitatejuejin2.requestinterface.article.WriteCommentService
-import com.example.imitatejuejin2.requestinterface.mine.EditUsernameService
 import com.example.imitatejuejin2.data.response.BaseResponse
 import com.example.imitatejuejin2.ui.activity.ArticleActivity
-import com.example.imitatejuejin2.ui.activity.EditMyInfoActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -90,7 +82,7 @@ class CommentListRecyclerView1(
             // 设置对话框的按钮
             alertDialogBuilder.setPositiveButton("回复") { dialog, _ ->
                 val comment = input.text.toString()
-                val time = Time.getNowTime()
+                val time = TimeBuilder.getNowTime()
                 val Authorization = AuthorizationBuilder.getAuthorization()
                 // 在这里处理输入框中的文本
                 ServiceCreator.create(WriteCommentService::class.java)
@@ -104,7 +96,7 @@ class CommentListRecyclerView1(
                             if (response.body()?.code == 200) {
                                 Log.d("comment2", "评论成功")
                                 // 二级评论 notify
-                                CommentsList.createParentCommentsList(articleId)
+                                CommentsListBuilder.createParentCommentsList(articleId)
                                 // HasChanged.setCommentsItemHasChangedValue(true)
                                 Thread.sleep(1000L)
                                 dialog.dismiss()

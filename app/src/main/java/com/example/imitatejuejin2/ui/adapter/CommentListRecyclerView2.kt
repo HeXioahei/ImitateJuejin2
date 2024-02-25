@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imitatejuejin2.databinding.ItemKidCommentsBinding
-import com.example.imitatejuejin2.data.KidComments
+import com.example.imitatejuejin2.data.basedata.KidComments
 import com.example.imitatejuejin2.ui.activity.ArticleActivity
 
 class CommentListRecyclerView2 (

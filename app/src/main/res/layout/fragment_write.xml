@@ -74,7 +74,7 @@
                 android:layout_height="match_parent"
                 android:hint="在此可显示markdown渲染效果"
                 android:fontFamily="@font/font1"
-                android:gravity="center"/>
+                android:gravity="start"/>
 
         </androidx.core.widget.NestedScrollView>
 

@@ -1,6 +1,6 @@
 package com.example.imitatejuejin2.requestinterface.begin
 
-import com.example.imitatejuejin2.data.AccessToken
+import com.example.imitatejuejin2.data.basedata.AccessToken
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header

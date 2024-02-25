@@ -1,4 +1,4 @@
-package com.example.imitatejuejin2.data
+package com.example.imitatejuejin2.data.basedata
 
 class GetCommentsData (
     val head_image: String,

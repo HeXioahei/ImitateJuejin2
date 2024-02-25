@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imitatejuejin2.databinding.ViewpagerHeadBinding
-import com.example.imitatejuejin2.data.Article
+import com.example.imitatejuejin2.data.basedata.Article
 import com.example.imitatejuejin2.ui.activity.MainActivity
 
 class ArticleTypeViewPager(

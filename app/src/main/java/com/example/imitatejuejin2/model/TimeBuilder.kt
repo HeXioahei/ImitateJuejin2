@@ -4,7 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import java.time.LocalDateTime
 
-object Time {
+object TimeBuilder {
     @RequiresApi(Build.VERSION_CODES.O)
     fun getNowTime(): String {
         val year = LocalDateTime.now().year

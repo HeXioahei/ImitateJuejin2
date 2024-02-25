@@ -1,6 +1,6 @@
-package com.example.imitatejuejin2.data
+package com.example.imitatejuejin2.data.basedata
 
-class Article (
+class ArticleListData (
     val title: String,
     val content: String,
     val hits: Int,

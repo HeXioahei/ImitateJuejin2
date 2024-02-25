@@ -12,12 +12,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.example.imitatejuejin2.databinding.FragmentWriteBinding
-import com.example.imitatejuejin2.model.ArticleList
+import com.example.imitatejuejin2.model.ArticleListBuilder
 import com.example.imitatejuejin2.model.AuthorizationBuilder
 import com.example.imitatejuejin2.model.HasChanged
-import com.example.imitatejuejin2.model.MarkdownText
+import com.example.imitatejuejin2.model.MarkdownTextBuilder
 import com.example.imitatejuejin2.model.ServiceCreator
-import com.example.imitatejuejin2.model.Time
+import com.example.imitatejuejin2.model.TimeBuilder
 import com.example.imitatejuejin2.requestinterface.write.WriteArticleService
 import com.example.imitatejuejin2.data.response.BaseResponse
 import com.example.imitatejuejin2.ui.activity.MainActivity
@@ -49,7 +49,7 @@ class WriteFragment : Fragment() {
                     // 可以考虑使用延迟渲染或debounce机制来优化性能
 //                    val markwonString = markwon.toMarkdown(binding.writeContent.text.toString())
 //                    binding.showContent.text = markwonString
-                    MarkdownText.setMarkdownText(binding.showContent, s.toString(), mainActivity)
+                    MarkdownTextBuilder.setMarkdownText(binding.showContent, s.toString(), mainActivity)
                 }
 
                 override fun afterTextChanged(s: Editable?) {
@@ -61,7 +61,7 @@ class WriteFragment : Fragment() {
             binding.publish.setOnClickListener {
                 val title = binding.writeTitle.text.toString()
                 val content = binding.writeContent.text.toString()
-                val time = Time.getNowTime()
+                val time = TimeBuilder.getNowTime()
                 val appService = ServiceCreator.create(WriteArticleService::class.java)
                 appService.writeArticleService(
                     title,
@@ -78,7 +78,7 @@ class WriteFragment : Fragment() {
                         Log.d("code", "$code")
                         if (code == 200) {
                             Toast.makeText(mainActivity, "发表成功", Toast.LENGTH_SHORT).show()
-                            ArticleList.setAllArticleList(AuthorizationBuilder.getAuthorization())
+                            ArticleListBuilder.setAllArticleList(AuthorizationBuilder.getAuthorization())
                             HasChanged.setArticlesItemHasChangedValue1(true)
                             HasChanged.setArticlesItemHasChangedValue2(true)
                         } else {

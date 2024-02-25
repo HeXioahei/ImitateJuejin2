@@ -1,15 +1,14 @@
 package com.example.imitatejuejin2.model
 
 import android.util.Log
-import com.example.imitatejuejin2.data.GetCommentsData
+import com.example.imitatejuejin2.data.basedata.GetCommentsData
 import com.example.imitatejuejin2.requestinterface.article.GetCommentsService
 import com.example.imitatejuejin2.data.response.GetCommentsResponse
-import com.example.imitatejuejin2.ui.activity.ArticleActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-object CommentsList {
+object CommentsListBuilder {
 
     private var parentCommentsList: MutableList<GetCommentsData> = mutableListOf()
 
@@ -31,7 +30,7 @@ object CommentsList {
                         parentCommentsList = back.data
                         Log.d("createComments", "success")
                     }
-                    FlagBuilder.setHasSetCommentsList(true)
+                    Flag.setHasSetCommentsList(true)
                 }
 
                 override fun onFailure(call: Call<GetCommentsResponse>, t: Throwable) {

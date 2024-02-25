@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.TextView
 import io.noties.markwon.Markwon
 
-object MarkdownText {
+object MarkdownTextBuilder {
 
     fun setMarkdownText(textView: TextView, text: String, context: Context) {
         val markwon = Markwon.create(context)

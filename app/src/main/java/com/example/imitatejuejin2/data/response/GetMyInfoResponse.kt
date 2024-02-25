@@ -1,6 +1,6 @@
 package com.example.imitatejuejin2.data.response
 
-import com.example.imitatejuejin2.data.AuthorBrief
+import com.example.imitatejuejin2.data.basedata.AuthorBrief
 
 class GetMyInfoResponse (
     val code: Int,

@@ -1,4 +1,4 @@
-package com.example.imitatejuejin2.requestinterface.mine
+package com.example.imitatejuejin2.requestinterface.mine.edit
 
 import com.example.imitatejuejin2.data.response.BaseResponse
 import retrofit2.Call

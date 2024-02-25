@@ -13,7 +13,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.example.imitatejuejin2.R
 import com.example.imitatejuejin2.databinding.ActivityEditMyInfoBinding
@@ -23,9 +22,9 @@ import com.example.imitatejuejin2.model.AuthorizationBuilder
 import com.example.imitatejuejin2.model.HasChanged
 import com.example.imitatejuejin2.model.ReLogin
 import com.example.imitatejuejin2.model.ServiceCreator
-import com.example.imitatejuejin2.requestinterface.mine.EditHeadImageService
-import com.example.imitatejuejin2.requestinterface.mine.EditPasswordService
-import com.example.imitatejuejin2.requestinterface.mine.EditUsernameService
+import com.example.imitatejuejin2.requestinterface.mine.edit.EditHeadImageService
+import com.example.imitatejuejin2.requestinterface.mine.edit.EditPasswordService
+import com.example.imitatejuejin2.requestinterface.mine.edit.EditUsernameService
 import com.example.imitatejuejin2.data.response.BaseResponse
 import okhttp3.MediaType
 import okhttp3.MultipartBody

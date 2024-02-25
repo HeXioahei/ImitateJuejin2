@@ -45,12 +45,26 @@
             app:layout_constraintStart_toEndOf="@+id/articleHeadImage"
             app:layout_constraintTop_toTopOf="@+id/articleHeadImage" />
 
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/btn_to_edit_my_info"
+            android:text="关 注"
+            android:textSize="17sp"
+            android:fontFamily="@font/font1"
+            android:textColor="#EEA73B"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/articleUsername"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="20dp" />
+            app:layout_constraintGuide_begin="16dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline19"

@@ -1,6 +1,5 @@
 package com.example.imitatejuejin2.ui.activity
 
-import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -10,26 +9,22 @@ import android.util.Log
 import android.widget.EditText
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.example.imitatejuejin2.R
-import com.example.imitatejuejin2.data.GetCommentsData
+import com.example.imitatejuejin2.data.basedata.GetCommentsData
 import com.example.imitatejuejin2.databinding.ActivityArticleBinding
-import com.example.imitatejuejin2.model.ArticleList
+import com.example.imitatejuejin2.model.ArticleListBuilder
 import com.example.imitatejuejin2.model.AuthorizationBuilder
-import com.example.imitatejuejin2.model.CommentsList
-import com.example.imitatejuejin2.model.FlagBuilder
+import com.example.imitatejuejin2.model.CommentsListBuilder
+import com.example.imitatejuejin2.model.Flag
 import com.example.imitatejuejin2.model.HasChanged
-import com.example.imitatejuejin2.model.MarkdownText
+import com.example.imitatejuejin2.model.MarkdownTextBuilder
 import com.example.imitatejuejin2.model.ServiceCreator
-import com.example.imitatejuejin2.model.Time
+import com.example.imitatejuejin2.model.TimeBuilder
 import com.example.imitatejuejin2.requestinterface.article.CollectService
-import com.example.imitatejuejin2.requestinterface.article.GetCommentsService
 import com.example.imitatejuejin2.requestinterface.article.LikeService
 import com.example.imitatejuejin2.requestinterface.article.WriteCommentService
 import com.example.imitatejuejin2.data.response.BaseResponse
-import com.example.imitatejuejin2.data.response.GetCommentsResponse
 import com.example.imitatejuejin2.ui.adapter.CommentListRecyclerView1
 import okhttp3.FormBody
 import retrofit2.Call
@@ -50,7 +45,7 @@ class ArticleActivity : AppCompatActivity() {
         binding = ActivityArticleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        FlagBuilder.setHasSetCommentsList(false)
+        Flag.setHasSetCommentsList(false)
 
         // 呈现视图内容
         val articleHeadImageUriString = intent.getStringExtra("headImage") as String
@@ -62,7 +57,7 @@ class ArticleActivity : AppCompatActivity() {
         binding.articleTime.text = intent.getStringExtra("time") as String
 
         val content = intent.getStringExtra("content") as String
-        MarkdownText.setMarkdownText(binding.articleContent, content, this)
+        MarkdownTextBuilder.setMarkdownText(binding.articleContent, content, this)
 
         binding.articleLikes.text = intent.getStringExtra("likes").toString()
         val collects = intent.getStringExtra("collects").toString().toInt() + 1
@@ -93,7 +88,7 @@ class ArticleActivity : AppCompatActivity() {
         val Authorization = AuthorizationBuilder.getAuthorization()
 
         // 获取评论列表并呈现
-        parentCommentList = CommentsList.getParentCommentsList()
+        parentCommentList = CommentsListBuilder.getParentCommentsList()
         commentListRecyclerView1 = CommentListRecyclerView1(parentCommentList, this@ArticleActivity, articleId)
         binding.commentRV.adapter = commentListRecyclerView1
         val layoutManager = LinearLayoutManager(this@ArticleActivity)
@@ -141,7 +136,7 @@ class ArticleActivity : AppCompatActivity() {
                             binding.articleLikes.text = likes.toString()
                             likeStatusValue = "0"
                         }
-                        ArticleList.setAllArticleList(Authorization)
+                        ArticleListBuilder.setAllArticleList(Authorization)
                         HasChanged.setArticlesItemHasChangedValue1(true)
                         HasChanged.setArticlesItemHasChangedValue2(true)
                     }
@@ -188,7 +183,7 @@ class ArticleActivity : AppCompatActivity() {
                                 binding.articleCollects.text = collects.toString()
                                 collectStatusValue = "0"
                             }
-                            ArticleList.setAllArticleList(Authorization)
+                            ArticleListBuilder.setAllArticleList(Authorization)
                             HasChanged.setArticlesItemHasChangedValue1(true)
                             HasChanged.setArticlesItemHasChangedValue2(true)
                         }
@@ -210,7 +205,7 @@ class ArticleActivity : AppCompatActivity() {
 
             alertDialogBuilder.setPositiveButton("发表") { dialog, _ ->
                 val comment = input.text.toString()
-                val time = Time.getNowTime()
+                val time = TimeBuilder.getNowTime()
                 if (comment != "") {
                     ServiceCreator.create(WriteCommentService::class.java)
                         .writeCommentService(articleId, comment, time, "0", "1", Authorization)
@@ -222,7 +217,7 @@ class ArticleActivity : AppCompatActivity() {
                                 if (response.body()?.code == 200) {
                                     Log.d("comment", "评论成功")
                                     // 重新获取并更新评论列表
-                                    CommentsList.createParentCommentsList(articleId)
+                                    CommentsListBuilder.createParentCommentsList(articleId)
                                     // HasChanged.setCommentsItemHasChangedValue(true)
                                     Log.d("change", HasChanged.getCommentsItemHasChangedValue().toString())
                                     Thread.sleep(1000L)

@@ -1,7 +1,5 @@
 package com.example.imitatejuejin2.data.response
 
-import com.example.imitatejuejin2.data.LoginData
-
 class LoginResponse (
     val code: Int,
     val msg: String,

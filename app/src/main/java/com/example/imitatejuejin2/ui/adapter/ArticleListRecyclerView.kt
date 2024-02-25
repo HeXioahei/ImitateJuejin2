@@ -14,13 +14,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imitatejuejin2.R
 import com.example.imitatejuejin2.databinding.ItemArticleBinding
-import com.example.imitatejuejin2.data.Article
-import com.example.imitatejuejin2.model.ArticleList
+import com.example.imitatejuejin2.data.basedata.Article
+import com.example.imitatejuejin2.model.ArticleListBuilder
 import com.example.imitatejuejin2.model.AuthorizationBuilder
-import com.example.imitatejuejin2.model.CommentsList
-import com.example.imitatejuejin2.model.FlagBuilder
+import com.example.imitatejuejin2.model.CommentsListBuilder
+import com.example.imitatejuejin2.model.Flag
 import com.example.imitatejuejin2.model.HasChanged
-import com.example.imitatejuejin2.model.MarkdownText
+import com.example.imitatejuejin2.model.MarkdownTextBuilder
 import com.example.imitatejuejin2.model.ServiceCreator
 import com.example.imitatejuejin2.requestinterface.article.HitService
 import com.example.imitatejuejin2.requestinterface.mine.DeleteArticleService
@@ -79,7 +79,7 @@ class ArticleListRecyclerView(
         holder.username.text = item.author.username
         holder.time.text = item.time
         val contentString = item.content
-        MarkdownText.setMarkdownText(holder.content, contentString, activity)
+        MarkdownTextBuilder.setMarkdownText(holder.content, contentString, activity)
         holder.hits.text = item.hits.toString()
         /*处理点赞图标，通过 like_status 来判断要选取那个图标，用 if 判断*/
         if (item.like_status == 1) {
@@ -126,10 +126,10 @@ class ArticleListRecyclerView(
 
             // 创建其评论列表
             GlobalScope.launch {
-                CommentsList.createParentCommentsList(item.id.toString())
+                CommentsListBuilder.createParentCommentsList(item.id.toString())
 
                 while (true) {
-                    if (FlagBuilder.getHasSetCommentsList()) {
+                    if (Flag.getHasSetCommentsList()) {
                         activity.startActivity(intent)
                         break
                     }
@@ -157,7 +157,7 @@ class ArticleListRecyclerView(
                             ) {
                                 if (response.body()?.code == 200) {
                                     Toast.makeText(activity, "删除成功", Toast.LENGTH_SHORT).show()
-                                    ArticleList.setAllArticleList(Authorization)
+                                    ArticleListBuilder.setAllArticleList(Authorization)
                                     HasChanged.setArticlesItemHasChangedValue1(true)
                                     HasChanged.setArticlesItemHasChangedValue2(true)
                                 } else {

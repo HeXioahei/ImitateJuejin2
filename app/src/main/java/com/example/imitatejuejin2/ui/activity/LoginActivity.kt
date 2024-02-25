@@ -6,10 +6,10 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.imitatejuejin2.databinding.ActivityLoginBinding
-import com.example.imitatejuejin2.model.ArticleList
+import com.example.imitatejuejin2.model.ArticleListBuilder
 import com.example.imitatejuejin2.model.AuthorBriefBuilder
 import com.example.imitatejuejin2.model.AuthorizationBuilder
-import com.example.imitatejuejin2.model.FlagBuilder
+import com.example.imitatejuejin2.model.Flag
 import com.example.imitatejuejin2.model.ServiceCreator
 import com.example.imitatejuejin2.requestinterface.begin.LoginService
 import com.example.imitatejuejin2.data.response.LoginResponse
@@ -43,6 +43,8 @@ class LoginActivity : AppCompatActivity() {
             val loginUsername = binding.loginUsername.text.toString()
             val loginPassword = binding.loginPassword.text.toString()
 
+            Toast.makeText(this, "正在登录...", Toast.LENGTH_SHORT).show()
+
             // 进行登录的网络请求，得到两个token
             ServiceCreator.create(LoginService::class.java)
                 .login(loginUsername, loginPassword)
@@ -67,30 +69,30 @@ class LoginActivity : AppCompatActivity() {
                             GlobalScope.launch {
                                 try {
                                     // 同时执行多个网络请求
-                                    ArticleList.createNewArticleList(Authorization)
-                                    ArticleList.createHotArticleList(Authorization)
-                                    ArticleList.createMyArticleList(Authorization)
-                                    ArticleList.createLikesArticleList(Authorization)
-                                    ArticleList.createCollectArticleList(Authorization)
+                                    ArticleListBuilder.createNewArticleList(Authorization)
+                                    ArticleListBuilder.createHotArticleList(Authorization)
+                                    ArticleListBuilder.createMyArticleList(Authorization)
+                                    ArticleListBuilder.createLikesArticleList(Authorization)
+                                    ArticleListBuilder.createCollectArticleList(Authorization)
                                     AuthorBriefBuilder.setAuthorBrief(Authorization)
 
                                     // 检查是否数据都初始化完毕
                                     while (true) {
-                                        Log.d("FlagBuilder.getHasSetAuthorBrief()", FlagBuilder.getHasSetAuthorBrief().toString())
-                                        Log.d("FlagBuilder.getHasSetNewList()", FlagBuilder.getHasSetNewList().toString())
-                                        Log.d("FlagBuilder.getHasSetHotList()", FlagBuilder.getHasSetHotList().toString())
-                                        Log.d("FlagBuilder.getHasSetMyList()", FlagBuilder.getHasSetMyList().toString())
-                                        Log.d("FlagBuilder.getHasSetLikeList()", FlagBuilder.getHasSetLikeList().toString())
-                                        Log.d("FlagBuilder.getHasSetCollectList()", FlagBuilder.getHasSetCollectList().toString())
+                                        Log.d("FlagBuilder.getHasSetAuthorBrief()", Flag.getHasSetAuthorBrief().toString())
+                                        Log.d("FlagBuilder.getHasSetNewList()", Flag.getHasSetNewList().toString())
+                                        Log.d("FlagBuilder.getHasSetHotList()", Flag.getHasSetHotList().toString())
+                                        Log.d("FlagBuilder.getHasSetMyList()", Flag.getHasSetMyList().toString())
+                                        Log.d("FlagBuilder.getHasSetLikeList()", Flag.getHasSetLikeList().toString())
+                                        Log.d("FlagBuilder.getHasSetCollectList()", Flag.getHasSetCollectList().toString())
 
                                         // 直到所有数据都初始化完毕，再进入首页
                                         if (
-                                            FlagBuilder.getHasSetAuthorBrief()
-                                            && FlagBuilder.getHasSetNewList()
-                                            && FlagBuilder.getHasSetHotList()
-                                            && FlagBuilder.getHasSetMyList()
-                                            && FlagBuilder.getHasSetLikeList()
-                                            && FlagBuilder.getHasSetCollectList()
+                                            Flag.getHasSetAuthorBrief()
+                                            && Flag.getHasSetNewList()
+                                            && Flag.getHasSetHotList()
+                                            && Flag.getHasSetMyList()
+                                            && Flag.getHasSetLikeList()
+                                            && Flag.getHasSetCollectList()
                                         ) {
                                             Log.d("intent", "intent")
                                             // 跳转到首页

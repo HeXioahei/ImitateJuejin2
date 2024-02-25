@@ -1,7 +1,7 @@
 package com.example.imitatejuejin2.model
 
 import android.util.Log
-import com.example.imitatejuejin2.data.Article
+import com.example.imitatejuejin2.data.basedata.Article
 import com.example.imitatejuejin2.requestinterface.mine.GetCollectArticleListService
 import com.example.imitatejuejin2.requestinterface.head.GetHotArticleListService
 import com.example.imitatejuejin2.requestinterface.mine.GetLikesArticleListService
@@ -12,7 +12,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-object ArticleList {
+object ArticleListBuilder {
     private var newList: MutableList<Article> = mutableListOf()
     private var hotList: MutableList<Article> = mutableListOf()
     private var myList: MutableList<Article> = mutableListOf()
@@ -32,7 +32,7 @@ object ArticleList {
                 if (back?.data != null) {
                     hotList = back.data
                 }
-                FlagBuilder.setHasSetHotList(true)
+                Flag.setHasSetHotList(true)
             }
 
             override fun onFailure(call: Call<GetArticleListResponse>, t: Throwable) {
@@ -61,7 +61,7 @@ object ArticleList {
 
                 }
 
-                FlagBuilder.setHasSetNewList(true)
+                Flag.setHasSetNewList(true)
             }
 
             override fun onFailure(call: Call<GetArticleListResponse>, t: Throwable) {
@@ -86,7 +86,7 @@ object ArticleList {
 
                 }
 
-                FlagBuilder.setHasSetMyList(true)
+                Flag.setHasSetMyList(true)
             }
 
             override fun onFailure(call: Call<GetArticleListResponse>, t: Throwable) {
@@ -109,7 +109,7 @@ object ArticleList {
 
                 }
 
-                FlagBuilder.setHasSetCollectList(true)
+                Flag.setHasSetCollectList(true)
             }
 
             override fun onFailure(call: Call<GetArticleListResponse>, t: Throwable) {
@@ -132,7 +132,7 @@ object ArticleList {
 
                 }
 
-                FlagBuilder.setHasSetLikeList(true)
+                Flag.setHasSetLikeList(true)
             }
 
             override fun onFailure(call: Call<GetArticleListResponse>, t: Throwable) {

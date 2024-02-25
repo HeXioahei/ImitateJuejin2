@@ -1,6 +1,6 @@
 package com.example.imitatejuejin2.model
 
-object FlagBuilder {
+object Flag {
     private var hasSetAuthorBrief: Boolean = false
     private var hasSetNewList: Boolean = false
     private var hasSetHotList: Boolean = false
