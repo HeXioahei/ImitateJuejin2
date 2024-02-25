@@ -65,7 +65,8 @@ class ArticleActivity : AppCompatActivity() {
         MarkdownText.setMarkdownText(binding.articleContent, content, this)
 
         binding.articleLikes.text = intent.getStringExtra("likes").toString()
-        binding.articleCollects.text = intent.getStringExtra("collects").toString()
+        val collects = intent.getStringExtra("collects").toString().toInt() + 1
+        binding.articleCollects.text = collects.toString()
         binding.articleComments.text = intent.getStringExtra("comments").toString()
 
         val articleId = intent.getStringExtra("id") as String
