@@ -73,6 +73,13 @@
         app:layout_constraintStart_toEndOf="@+id/parentCommentHeadImage"
         app:layout_constraintTop_toBottomOf="@+id/blank" />
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/kidCommentRV"
+        tools:layout_editor_absoluteX="5dp" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline26"
         android:layout_width="wrap_content"

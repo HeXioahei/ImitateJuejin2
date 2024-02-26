@@ -9,10 +9,10 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         android:layout_width="0dp"
-        android:layout_height="90dp"
+        android:layout_height="wrap_content"
         android:background="#00ffffff"
-        app:itemIconSize="40dp"
         app:compatShadowEnabled="false"
+        app:itemIconSize="30dp"
         app:itemRippleColor="#ffFFD8C7"
         app:itemTextColor="@color/selector_nav_bottom_item_text"
         app:layout_constraintBottom_toBottomOf="parent"

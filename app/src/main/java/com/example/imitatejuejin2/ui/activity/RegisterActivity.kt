@@ -46,7 +46,7 @@ class RegisterActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
                     Log.d("PhotoPicker", "Selected URI: $uri")
-                    Glide.with(this).load(uri).into(binding.registerHeadImage)
+                    // Glide.with(this).load(uri).into(binding.registerHeadImage)
 
                     headImageFile = getImageFileFromUri(this, uri)
                     Log.d("file1", headImageFile.name.toString())

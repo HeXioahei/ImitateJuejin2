@@ -7,6 +7,7 @@
     <TextView
         android:id="@+id/item_nav_head"
         android:text="测试"
+        android:textSize="25sp"
         android:textColor="@color/selector_nav_article_type_item"
         android:fontFamily="@font/font1"
         android:layout_gravity="center"

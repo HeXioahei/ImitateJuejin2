@@ -4,19 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.HeadFragment"
-    android:background="@drawable/img_whole_background">
+    android:background="@drawable/img_whole_background"
+    tools:context=".ui.fragment.HeadFragment">
 
     <EditText
         android:id="@+id/editText"
-        android:layout_width="320dp"
+        android:layout_width="0dp"
         android:layout_height="40dp"
         android:background="@drawable/bg_search"
+        android:fontFamily="@font/font1"
         android:gravity="center"
         android:hint="抱歉，暂时不支持搜索功能哦"
         android:textSize="10sp"
-        android:fontFamily="@font/font1"
         app:layout_constraintBottom_toTopOf="@+id/articlesGuide"
+        app:layout_constraintEnd_toStartOf="@+id/guideline28"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,7 +28,7 @@
         android:background="@drawable/img_headimage_test"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/editText"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/articlesGuide"
@@ -44,6 +45,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/articlesGuide"/>
+        app:layout_constraintTop_toBottomOf="@+id/articlesGuide" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline28"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.78" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

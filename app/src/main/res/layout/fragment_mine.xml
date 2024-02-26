@@ -19,10 +19,9 @@
         android:id="@+id/myHeadImage"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginStart="4dp"
         android:background="@drawable/img_headimage_test"
         android:elevation="1dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline27"
         app:layout_constraintTop_toTopOf="@+id/guideline9" />
 
     <TextView
