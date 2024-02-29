@@ -1,8 +1,12 @@
 package com.example.imitatejuejin2.ui.adapter
 
+/**
+ *      desc     ： 文章列表的适配器
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +17,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.example.imitatejuejin2.R
-import com.example.imitatejuejin2.databinding.ItemArticleBinding
 import com.example.imitatejuejin2.data.basedata.Article
+import com.example.imitatejuejin2.data.response.BaseResponse
+import com.example.imitatejuejin2.databinding.ItemArticleBinding
 import com.example.imitatejuejin2.model.ArticleListBuilder
 import com.example.imitatejuejin2.model.AuthorizationBuilder
 import com.example.imitatejuejin2.model.CommentsListBuilder
@@ -25,7 +32,6 @@ import com.example.imitatejuejin2.model.MarkdownTextBuilder
 import com.example.imitatejuejin2.model.ServiceCreator
 import com.example.imitatejuejin2.requestinterface.article.HitService
 import com.example.imitatejuejin2.requestinterface.mine.DeleteArticleService
-import com.example.imitatejuejin2.data.response.BaseResponse
 import com.example.imitatejuejin2.ui.activity.ArticleActivity
 import com.example.imitatejuejin2.ui.activity.MainActivity
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -37,6 +43,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+/**
+ * @param list ：文章列表
+ * @param activity ：该适配器所在的Activity
+ * @param myName ： 我的用户名
+ */
 class ArticleListRecyclerView(
     private val list: MutableList<Article>,
     val activity: MainActivity,
@@ -44,7 +55,6 @@ class ArticleListRecyclerView(
 ) : RecyclerView.Adapter<ArticleListRecyclerView.ViewHolder>() {
 
     inner class ViewHolder(binding: ItemArticleBinding) : RecyclerView.ViewHolder(binding.root) {
-
         val title: TextView = binding.itemTitle
         val headImage: ImageView = binding.itemHeadImage
         val username: TextView = binding.itemUserName
@@ -70,26 +80,30 @@ class ArticleListRecyclerView(
     @OptIn(DelicateCoroutinesApi::class)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
-        Log.d("recyclerView2", "recyclerView2")
         holder.title.text = item.title
 
-        Log.d("hhhhhhhhhhhh", item.author.head_image)
-//        val decodedBytes = Base64.decode(item.author.head_image, Base64.DEFAULT)
-//        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-//        holder.headImage.setImageBitmap(bitmap)
-        Glide.with(activity).load(item.author.head_image).into(holder.headImage)
+        // 显示头像
+        val glideUrl = GlideUrl(
+            item.author.head_image,
+            LazyHeaders.Builder()
+                .addHeader("Authorization", AuthorizationBuilder.getAuthorization())
+                .build()
+        )
+        Glide.with(activity).load(glideUrl).into(holder.headImage)
 
         holder.username.text = item.author.username
         holder.time.text = item.time
+
         val contentString = item.content
         MarkdownTextBuilder.setMarkdownText(holder.content, contentString, activity)
+
         holder.hits.text = item.hits.toString()
-        /*处理点赞图标，通过 like_status 来判断要选取那个图标，用 if 判断*/
+        // 处理点赞图标，通过 like_status 来判断要选取那个图标，用 if 判断
         if (item.like_status == 1) {
             holder.like.setImageResource(R.drawable.img_liked)
         }
         holder.likes.text = item.likes.toString()
-        /*处理收藏图标，通过 collect_status 来判断要选取那个图标，用 if 判断*/
+        // 处理收藏图标，通过 collect_status 来判断要选取那个图标，用 if 判断
         if (item.collect_status == 1) {
             holder.collect.setImageResource(R.drawable.img_collected)
         }
@@ -118,21 +132,20 @@ class ArticleListRecyclerView(
                     override fun onResponse(
                         call: Call<BaseResponse>,
                         response: Response<BaseResponse>,
-                    ) {
-                        val back = response.body()
-                    }
+                    ) { }
 
                     override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
                         t.printStackTrace()
                     }
                 })
 
-            // 创建其评论列表
+            // 初始化评论列表
             GlobalScope.launch {
                 CommentsListBuilder.createParentCommentsList(item.id.toString())
 
                 while (true) {
                     if (Flag.getHasSetCommentsList()) {
+                        // 初始化完才可打开文章内容页
                         activity.startActivity(intent)
                         break
                     }
@@ -143,11 +156,15 @@ class ArticleListRecyclerView(
             }
         }
 
-        // 删除文章
+        // 设置长点击时间，删除文章
         holder.itemArticle.setOnLongClickListener {
+
             val alertDialogBuilder = AlertDialog.Builder(activity)
+
+            // 如果是我的文章
             if (item.author.username == myName) {
                 alertDialogBuilder.setMessage("确定要删除你的文章吗？")
+
                 // 设置对话框的按钮
                 alertDialogBuilder.setPositiveButton("确定") { dialog, _ ->
                     val Authorization = AuthorizationBuilder.getAuthorization()
@@ -159,26 +176,33 @@ class ArticleListRecyclerView(
                                 response: Response<BaseResponse>,
                             ) {
                                 if (response.body()?.code == 200) {
-                                    Toast.makeText(activity, "删除成功", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(activity, "删除成功", Toast.LENGTH_SHORT)
+                                        .show()
+                                    // 重新获取列表并通知更新
                                     ArticleListBuilder.setAllArticleList(Authorization)
                                     HasChanged.setArticlesItemHasChangedValue1(true)
                                     HasChanged.setArticlesItemHasChangedValue2(true)
                                 } else {
-                                    Toast.makeText(activity, "删除失败", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(activity, "删除失败", Toast.LENGTH_SHORT)
+                                        .show()
                                 }
                             }
+
                             override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
                                 t.printStackTrace()
                             }
                         })
+
                     dialog.dismiss()
                 }
+
                 alertDialogBuilder.setNegativeButton("取消") { dialog, _ ->
                     // 用户点击了取消按钮，这里可以不做处理或者执行相应的逻辑
                     dialog.dismiss()
                 }
+
             } else {
-                alertDialogBuilder.setTitle("这不是你的文章，不可删除哦！")
+                alertDialogBuilder.setMessage("这不是你的文章，不可删除哦！")
             }
             // 显示对话框
             alertDialogBuilder.show()

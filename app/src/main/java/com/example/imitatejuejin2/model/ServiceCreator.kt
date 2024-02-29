@@ -1,5 +1,11 @@
 package com.example.imitatejuejin2.model
 
+/**
+ *      desc     ： 创建网络请求的单例类
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

@@ -1,5 +1,11 @@
 package com.example.imitatejuejin2.model
 
+/**
+ *      desc     ： 创建评论列表的单例类
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 import android.util.Log
 import com.example.imitatejuejin2.data.basedata.GetCommentsData
 import com.example.imitatejuejin2.requestinterface.article.GetCommentsService

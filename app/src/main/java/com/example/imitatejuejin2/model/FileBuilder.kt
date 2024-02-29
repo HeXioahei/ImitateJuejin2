@@ -1,5 +1,11 @@
 package com.example.imitatejuejin2.model
 
+/**
+ *      desc     ： 将图片由uri转化为file类型的单例类
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 import android.content.Context
 import android.net.Uri
 import android.os.Build
@@ -15,20 +21,16 @@ object FileBuilder {
     @RequiresApi(Build.VERSION_CODES.Q)
     fun getImageFileFromUri(context: Context, imageUri: Uri): File {
         // 检查Android版本，对于Android 10及以上版本，使用新的MediaStore API
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return getImageFileFromUriAboveQ(context, imageUri)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            getImageFileFromUriAboveQ(context, imageUri)
         } else {
-            // 对于旧版本Android，可以使用之前的方法获取文件路径
-            // ...
-            return getImageFileFromUriUnderQ(context, imageUri)
+            getImageFileFromUriUnderQ(context, imageUri)
         }
     }
 
     private fun getImageFileFromUriAboveQ(context: Context, imageUri: Uri): File {
-        val inputStream: InputStream? = context.contentResolver.openInputStream(imageUri)
-        if (inputStream == null) {
-            return File("")
-        }
+        val inputStream: InputStream = context.contentResolver.openInputStream(imageUri)
+            ?: return File("")
 
         // 创建一个临时文件来保存图片内容
         val tempFile = File(context.cacheDir, "temp_image.jpg")
@@ -59,13 +61,12 @@ object FileBuilder {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun getImageFileFromUriUnderQ(context: Context, imageUri: Uri): File {
-        // val projection = arrayOf(MediaStore.Images.Media.DATA)
+
         val projection = arrayOf(MediaStore.Images.Media.DATA)
         val cursor = context.contentResolver.query(imageUri, projection, null, null, null)
 
         if (cursor != null) {
             if (cursor.moveToFirst()) {
-                //val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
                 val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
                 val imagePath = cursor.getString(columnIndex)
                 Log.d("pathname", imagePath.toString())

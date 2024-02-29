@@ -1,5 +1,11 @@
 package com.example.imitatejuejin2.ui.adapter
 
+/**
+ *      desc     ： 文章类型viewPager的适配器
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +16,11 @@ import com.example.imitatejuejin2.databinding.ViewpagerHeadBinding
 import com.example.imitatejuejin2.data.basedata.Article
 import com.example.imitatejuejin2.ui.activity.MainActivity
 
+/**
+ * @param list ：文章列表
+ * @param activity ：该适配器所在的Activity
+ * @param myName ： 我的用户名
+ */
 class ArticleTypeViewPager(
     val list: MutableList<MutableList<Article>>,
     val activity: MainActivity,
@@ -33,6 +44,7 @@ class ArticleTypeViewPager(
         val item = list[position]
         Log.d("recyclerView", "recyclerView")
 
+        // 创建文章列表 recyclerView
         val adapter = ArticleListRecyclerView(item, activity, myName)
         holder.viewPagerItem.adapter = adapter
         val layoutManager2 = LinearLayoutManager(activity)

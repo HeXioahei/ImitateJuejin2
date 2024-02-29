@@ -1,5 +1,11 @@
 package com.example.imitatejuejin2.ui.adapter
 
+/**
+ *      desc     ： 顶部导航栏的适配器
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +20,11 @@ import com.example.imitatejuejin2.ui.fragment.HeadFragment
 import com.example.imitatejuejin2.ui.fragment.MineFragment
 import java.util.Objects
 
+/**
+ * @param itemList ：导航的item列表
+ * @param viewPager ：所关联的viewPager
+ * @param fragment ：所在fragment
+ */
 class NavRecyclerView(
     private val itemList: MutableList<String>,
     private val viewPager: ViewPager2,
@@ -36,6 +47,7 @@ class NavRecyclerView(
     override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val item = itemList[position]
         holder.itemText.text = item
+
         // 导航栏 item 被点击时，光标跟着变化，ViewPager2 的 item 也跟着变化
         holder.itemText.setOnClickListener {
             viewPager.currentItem = holder.bindingAdapterPosition

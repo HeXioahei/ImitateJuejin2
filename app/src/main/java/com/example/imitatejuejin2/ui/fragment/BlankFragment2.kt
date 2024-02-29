@@ -1,5 +1,11 @@
 package com.example.imitatejuejin2.ui.fragment
 
+/**
+ *      desc     ： 空白页
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater

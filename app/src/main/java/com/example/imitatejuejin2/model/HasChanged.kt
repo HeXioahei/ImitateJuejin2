@@ -1,5 +1,11 @@
 package com.example.imitatejuejin2.model
 
+/**
+ *      desc     ： 通知列表和头像更新的单例类
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 object HasChanged {
     private var articlesItemHasChangedValue1 = false
     private var articlesItemHasChangedValue2 = false

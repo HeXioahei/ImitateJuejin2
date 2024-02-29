@@ -1,5 +1,11 @@
 package com.example.imitatejuejin2.ui.activity
 
+/**
+ *      desc     ： app页面
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +20,7 @@ import com.example.imitatejuejin2.model.ReLogin
 import com.example.imitatejuejin2.model.ServiceCreator
 import com.example.imitatejuejin2.requestinterface.end.ExitService
 import com.example.imitatejuejin2.data.response.BaseResponse
+import com.example.imitatejuejin2.model.Exit
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import retrofit2.Call
 import retrofit2.Callback
@@ -31,10 +38,8 @@ class MainActivity : AppCompatActivity() {
         // 获取 Authorization
         val Authorization = AuthorizationBuilder.getAuthorization()
 
-        // 重新标记列表的初始化情况，将其标记为未初始化，方便更新操作
+        // 重新标记信息的初始化情况，将其标记为未初始化，是下次新的登录可以正确地初始化信息
         Flag.run {
-//            setHasSetUsername(false)
-//            setHasSetHeadImage(false)
             setHasSetAuthorBrief(false)
             setHasSetNewList(false)
             setHasSetHotList(false)
@@ -52,10 +57,8 @@ class MainActivity : AppCompatActivity() {
         val navController: NavController = navHostFragment.navController
         navigationView.setupWithNavController(navController)
 
+        // 将 item 背景色调为透明
         navigationView.itemIconTintList = null
-//        navigationView.setOnItemReselectedListener {
-//
-//        }
 
         // 创建一个TokenValidityChecker实例，并设置Token过期时的操作
 //        val tokenValidityChecker = TokenValidityChecker(this, Authorization) {
@@ -93,6 +96,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
 
         val Authorization = AuthorizationBuilder.getAuthorization()
+
         val alertDialogBuilder = AlertDialog.Builder(this)
         alertDialogBuilder.setMessage("确定退出？")
 
@@ -109,8 +113,10 @@ class MainActivity : AppCompatActivity() {
                         t.printStackTrace()
                     }
                 })
+            Exit.setExit(true)
             finish()
         }
+
         alertDialogBuilder.setNegativeButton("取消") { dialog, _ ->
             dialog.dismiss()
         }
@@ -118,10 +124,12 @@ class MainActivity : AppCompatActivity() {
         alertDialogBuilder.show()
     }
 
+    /**
+     * 处理登出操作
+     */
     override fun onResume() {
         super.onResume()
         if (ReLogin.getIsReLogin()) {
-            ReLogin.setIsReLogin(false)
             finish()
         }
     }

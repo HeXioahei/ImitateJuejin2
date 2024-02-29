@@ -16,6 +16,8 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.example.imitatejuejin2.R
 import com.example.imitatejuejin2.databinding.ActivityEditMyInfoBinding
 import com.example.imitatejuejin2.databinding.EditPasswordBinding
@@ -30,6 +32,7 @@ import com.example.imitatejuejin2.requestinterface.mine.edit.EditUsernameService
 import com.example.imitatejuejin2.data.response.BaseResponse
 import com.example.imitatejuejin2.model.FileBuilder
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -41,7 +44,7 @@ class EditMyInfoActivity : AppCompatActivity() {
 
     companion object {
         private var username: String = AuthorBriefBuilder.getAuthorBrief().username
-        private val Authorization: String = AuthorizationBuilder.getAuthorization()
+        private var Authorization: String = AuthorizationBuilder.getAuthorization()
         private var headImageString: String = AuthorBriefBuilder.getAuthorBrief().head_image
     }
 
@@ -54,10 +57,17 @@ class EditMyInfoActivity : AppCompatActivity() {
         binding = ActivityEditMyInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        Authorization = AuthorizationBuilder.getAuthorization()
         username = AuthorBriefBuilder.getAuthorBrief().username
         headImageString = AuthorBriefBuilder.getAuthorBrief().head_image
 
-        Glide.with(this).load(headImageString).into(binding.editHeadImageView)
+        val glideUrl = GlideUrl(
+            headImageString,
+            LazyHeaders.Builder()
+                .addHeader("Authorization", Authorization)
+                .build()
+        )
+        Glide.with(this).load(glideUrl).into(binding.editHeadImageView)
         binding.editUsernameText.text = username
 
         // 返回
@@ -73,7 +83,8 @@ class EditMyInfoActivity : AppCompatActivity() {
                     Log.d("PhotoPicker", "Selected URI: $uri")
 
                     val headImageFile = FileBuilder.getImageFileFromUri(this, uri)
-                    val requestBody = RequestBody.create(MediaType.parse("head_image"), headImageFile)
+                    //val requestBody = RequestBody.create(MediaType.parse("head_image"), headImageFile)
+                    val requestBody = RequestBody.create("head_image".toMediaTypeOrNull(), headImageFile)
                     val multipartBody = MultipartBody.Part.createFormData("head_image", headImageFile.name, requestBody) // 这里的name（”head_image“）必须和接口文档里定义的参数名字一样
 
                     val appService = ServiceCreator.create(EditHeadImageService::class.java)

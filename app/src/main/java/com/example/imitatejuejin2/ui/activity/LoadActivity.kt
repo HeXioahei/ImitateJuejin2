@@ -1,30 +1,38 @@
 package com.example.imitatejuejin2.ui.activity
 
+/**
+ *      desc     ： 登录加载页面
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import com.example.imitatejuejin2.R
+import androidx.appcompat.app.AppCompatActivity
 import com.example.imitatejuejin2.databinding.ActivityLoadBinding
-import com.example.imitatejuejin2.databinding.ActivityLoginBinding
 import com.example.imitatejuejin2.model.ArticleListBuilder
 import com.example.imitatejuejin2.model.AuthorBriefBuilder
 import com.example.imitatejuejin2.model.AuthorizationBuilder
+import com.example.imitatejuejin2.model.Exit
 import com.example.imitatejuejin2.model.Flag
+import com.example.imitatejuejin2.model.ReLogin
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class LoadActivity : AppCompatActivity() {
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityLoadBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.progressBar.visibility = View.VISIBLE
+
         val Authorization = AuthorizationBuilder.getAuthorization()
 
         GlobalScope.launch {
@@ -35,14 +43,10 @@ class LoadActivity : AppCompatActivity() {
                 ArticleListBuilder.createMyArticleList(Authorization)
                 ArticleListBuilder.createLikesArticleList(Authorization)
                 ArticleListBuilder.createCollectArticleList(Authorization)
-//                AuthorBriefBuilder.setUsername(Authorization)
-//                AuthorBriefBuilder.setHeadImage(Authorization)
                 AuthorBriefBuilder.setAuthorBrief(Authorization)
 
                 // 检查是否数据都初始化完毕
                 while (true) {
-//                    Log.d("FlagBuilder.getHasSetUsername()", Flag.getHasSetUsername().toString())
-//                    Log.d("FlagBuilder.getHasSetHeadImage()", Flag.getHasSetHeadImage().toString())
                     Log.d("FlagBuilder.getHasSetAuthorBrief()", Flag.getHasSetAuthorBrief().toString())
                     Log.d("FlagBuilder.getHasSetNewList()", Flag.getHasSetNewList().toString())
                     Log.d("FlagBuilder.getHasSetHotList()", Flag.getHasSetHotList().toString())
@@ -52,8 +56,6 @@ class LoadActivity : AppCompatActivity() {
 
                     // 直到所有数据都初始化完毕，再进入首页
                     if (
-//                        Flag.getHasSetUsername()
-//                        && Flag.getHasSetHeadImage()
                         Flag.getHasSetAuthorBrief()
                         && Flag.getHasSetNewList()
                         && Flag.getHasSetHotList()
@@ -62,11 +64,6 @@ class LoadActivity : AppCompatActivity() {
                         && Flag.getHasSetCollectList()
                     ) {
                         // 跳转到首页
-                        Toast.makeText(
-                            this@LoadActivity,
-                            "登录成功",
-                            Toast.LENGTH_SHORT
-                        ).show()
                         val intent = Intent(this@LoadActivity, MainActivity::class.java)
                         startActivity(intent)
                         break
@@ -79,6 +76,22 @@ class LoadActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    /**
+     * 进行登出操作
+     */
+    override fun onResume() {
+        super.onResume()
+
+        if (ReLogin.getIsReLogin()) {
+            ReLogin.setIsReLogin(false)
+            finish()
+        }
+        if (Exit.getExit()) {
+            Exit.setExit(false)
+            finish()
         }
     }
 }

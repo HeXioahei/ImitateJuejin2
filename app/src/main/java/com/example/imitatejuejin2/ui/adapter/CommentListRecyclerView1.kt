@@ -1,33 +1,43 @@
 package com.example.imitatejuejin2.ui.adapter
 
+/**
+ *      desc     ： 父评论列表的适配器
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 import android.annotation.SuppressLint
-import android.graphics.BitmapFactory
 import android.os.Build
-import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.example.imitatejuejin2.data.basedata.GetCommentsData
+import com.example.imitatejuejin2.data.response.BaseResponse
 import com.example.imitatejuejin2.databinding.ItemParentCommentsBinding
 import com.example.imitatejuejin2.model.AuthorizationBuilder
 import com.example.imitatejuejin2.model.CommentsListBuilder
 import com.example.imitatejuejin2.model.ServiceCreator
 import com.example.imitatejuejin2.model.TimeBuilder
 import com.example.imitatejuejin2.requestinterface.article.WriteCommentService
-import com.example.imitatejuejin2.data.response.BaseResponse
 import com.example.imitatejuejin2.ui.activity.ArticleActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+/**
+ * @param parentCommentList ：父评论列表
+ * @param activity ：所在的activity
+ * @param articleId ：所属文章在总文章列表中的id
+ */
 class CommentListRecyclerView1(
     val parentCommentList: MutableList<GetCommentsData>,
     val activity: ArticleActivity,
@@ -35,7 +45,7 @@ class CommentListRecyclerView1(
 ) : RecyclerView.Adapter<CommentListRecyclerView1.ViewHolder>() {
 
     inner class ViewHolder(binding: ItemParentCommentsBinding) : RecyclerView.ViewHolder(binding.root) {
-        val headImage: ImageView = binding.parentCommentHeadImage
+        val headImage = binding.parentCommentHeadImage
         val userName: TextView = binding.parentCommentUsername
         val time: TextView = binding.parentCommentTime
         val comment: TextView = binding.parentCommentContent
@@ -55,15 +65,20 @@ class CommentListRecyclerView1(
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = parentCommentList[position]
-        // 设置头像
-//        val decodedBytes = Base64.decode(item.head_image, Base64.DEFAULT)
-//        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-//        holder.headImage.setImageBitmap(bitmap)
-        Glide.with(activity).load(item.head_image).into(holder.headImage)
+
+        val glideUrl = GlideUrl(
+            item.head_image,
+            LazyHeaders.Builder()
+                .addHeader("Authorization", AuthorizationBuilder.getAuthorization())
+                .build()
+        )
+        Glide.with(activity).load(glideUrl).into(holder.headImage)
 
         holder.userName.text = item.username
         holder.time.text = item.time
         holder.comment.text = item.comment
+
+        // 创建子评论
         val adapter = CommentListRecyclerView2(item.kid_comments, activity)
         holder.kidComments.adapter = adapter
         val layoutManager = LinearLayoutManager(activity)
@@ -86,6 +101,7 @@ class CommentListRecyclerView1(
                 val comment = input.text.toString()
                 val time = TimeBuilder.getNowTime()
                 val Authorization = AuthorizationBuilder.getAuthorization()
+
                 // 在这里处理输入框中的文本
                 ServiceCreator.create(WriteCommentService::class.java)
                     .writeCommentService(articleId, comment, time, item.cid, "2", Authorization)
@@ -99,7 +115,6 @@ class CommentListRecyclerView1(
                                 Log.d("comment2", "评论成功")
                                 // 二级评论 notify
                                 CommentsListBuilder.createParentCommentsList(articleId)
-                                // HasChanged.setCommentsItemHasChangedValue(true)
                                 Thread.sleep(1000L)
                                 dialog.dismiss()
                                 activity.recreate()
@@ -113,10 +128,12 @@ class CommentListRecyclerView1(
                         }
                     })
             }
+
             alertDialogBuilder.setNegativeButton("取消") { dialog, _ ->
                 // 用户点击了取消按钮，这里可以不做处理或者执行相应的逻辑
                 dialog.dismiss()
             }
+
             // 显示对话框
             alertDialogBuilder.show()
         }

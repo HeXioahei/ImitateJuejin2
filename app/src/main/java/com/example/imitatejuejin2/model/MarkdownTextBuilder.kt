@@ -1,5 +1,11 @@
 package com.example.imitatejuejin2.model
 
+/**
+ *      desc     ： 展示markdown文本的单例类
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 import android.content.Context
 import android.widget.TextView
 import io.noties.markwon.Markwon

@@ -1,5 +1,11 @@
 package com.example.imitatejuejin2.model
 
+/**
+ *      desc     ： 初始化顶部导航栏的item的单例类
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 object LittleNavBuilder {
     fun createArticleTypeNav(): MutableList<String> {
         val item1 = "最新"

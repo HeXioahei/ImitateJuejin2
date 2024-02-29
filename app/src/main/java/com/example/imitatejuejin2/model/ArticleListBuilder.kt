@@ -1,5 +1,11 @@
 package com.example.imitatejuejin2.model
 
+/**
+ *      desc     ： 创建文章列表的单例类
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 import android.util.Log
 import com.example.imitatejuejin2.data.basedata.Article
 import com.example.imitatejuejin2.requestinterface.mine.GetCollectArticleListService
@@ -20,6 +26,7 @@ object ArticleListBuilder {
     private var collectList: MutableList<Article> = mutableListOf()
     private var blankList: MutableList<Article> = mutableListOf()
 
+    // 创建热门文章
     fun createHotArticleList(Authorization: String) {
         val appService = ServiceCreator.create(GetHotArticleListService::class.java)
         appService.getHotArticleListService(Authorization).enqueue(object : Callback<GetArticleListResponse> {
@@ -32,6 +39,7 @@ object ArticleListBuilder {
                 if (back?.data != null) {
                     hotList = back.data
                 }
+                // 声明文章创建完毕
                 Flag.setHasSetHotList(true)
             }
 
@@ -41,6 +49,7 @@ object ArticleListBuilder {
         })
     }
 
+    // 最新文章
     fun createNewArticleList(Authorization: String) {
         val appService = ServiceCreator.create(GetNewArticleListService::class.java)
         appService.getNewArticleListService(Authorization).enqueue(object : Callback<GetArticleListResponse> {
@@ -70,6 +79,7 @@ object ArticleListBuilder {
         })
     }
 
+    // 我的文章
     fun createMyArticleList(Authorization: String) {
         val appService = ServiceCreator.create(GetMyArticleListService::class.java)
         appService.getMyArticleListService(Authorization).enqueue(object : Callback<GetArticleListResponse> {
@@ -83,7 +93,6 @@ object ArticleListBuilder {
                 if (back?.data != null) {
                     myList = back.data
                     Log.d("myList", myList.size.toString())
-
                 }
 
                 Flag.setHasSetMyList(true)
@@ -95,6 +104,7 @@ object ArticleListBuilder {
         })
     }
 
+    // 收藏的文章
     fun createCollectArticleList(Authorization: String) {
         val appService = ServiceCreator.create(GetCollectArticleListService::class.java)
         appService.getCollectArticleListService(Authorization).enqueue(object : Callback<GetArticleListResponse> {
@@ -118,6 +128,7 @@ object ArticleListBuilder {
         })
     }
 
+    // 点赞的文章
     fun createLikesArticleList(Authorization: String) {
         val appService = ServiceCreator.create(GetLikesArticleListService::class.java)
         appService.getLikesArticleListService(Authorization).enqueue(object : Callback<GetArticleListResponse> {

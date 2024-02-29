@@ -1,5 +1,11 @@
 package com.example.imitatejuejin2.model
 
+/**
+ *      desc     ： 封装Authorization的单例类
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 object AuthorizationBuilder {
 
     private var Authorization: String = "test"

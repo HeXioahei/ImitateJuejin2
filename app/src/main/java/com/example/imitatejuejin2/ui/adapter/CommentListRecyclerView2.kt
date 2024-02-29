@@ -1,25 +1,34 @@
 package com.example.imitatejuejin2.ui.adapter
 
-import android.graphics.BitmapFactory
-import android.util.Base64
+/**
+ *      desc     ： 子评论列表的适配器
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.imitatejuejin2.databinding.ItemKidCommentsBinding
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.example.imitatejuejin2.data.basedata.KidComments
+import com.example.imitatejuejin2.databinding.ItemKidCommentsBinding
+import com.example.imitatejuejin2.model.AuthorizationBuilder
 import com.example.imitatejuejin2.ui.activity.ArticleActivity
 
+/**
+ * @param kidCommentList ：子评论列表
+ * @param activity ：所在activity
+ */
 class CommentListRecyclerView2 (
     val kidCommentList: MutableList<KidComments>,
     val activity: ArticleActivity
 ) : RecyclerView.Adapter<CommentListRecyclerView2.ViewHolder>() {
 
-    inner class ViewHolder(binding: ItemKidCommentsBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        val headImage: ImageView = binding.kidCommentHeadImage
+    inner class ViewHolder(binding: ItemKidCommentsBinding) : RecyclerView.ViewHolder(binding.root) {
+        val headImage = binding.kidCommentHeadImage
         val userName: TextView = binding.kidCommentUsername
         val time: TextView = binding.kidCommentTime
         val comment: TextView = binding.kidCommentContent
@@ -35,12 +44,16 @@ class CommentListRecyclerView2 (
     override fun getItemCount(): Int = kidCommentList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
         val item = kidCommentList[position]
-        // 设置头像
-//        val decodedBytes = Base64.decode(item.head_image, Base64.DEFAULT)
-//        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-//        holder.headImage.setImageBitmap(bitmap)
-        Glide.with(activity).load(item.head_image).into(holder.headImage)
+
+        val glideUrl = GlideUrl(
+            item.head_image,
+            LazyHeaders.Builder()
+                .addHeader("Authorization", AuthorizationBuilder.getAuthorization())
+                .build()
+        )
+        Glide.with(activity).load(glideUrl).into(holder.headImage)
 
         holder.userName.text = item.username
         holder.time.text = item.time

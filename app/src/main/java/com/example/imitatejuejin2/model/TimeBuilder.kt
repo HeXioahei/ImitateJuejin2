@@ -1,5 +1,11 @@
 package com.example.imitatejuejin2.model
 
+/**
+ *      desc     ： 创建时间的单例类
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 import android.os.Build
 import androidx.annotation.RequiresApi
 import java.time.LocalDateTime

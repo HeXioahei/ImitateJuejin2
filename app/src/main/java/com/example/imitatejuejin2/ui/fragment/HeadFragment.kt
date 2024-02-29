@@ -1,30 +1,34 @@
 package com.example.imitatejuejin2.ui.fragment
 
+/**
+ *      desc     ： 首页
+ *      author   ： hexiaohei
+ *      time     ： 2024/2/29
+ */
+
 import android.annotation.SuppressLint
-import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
-import com.example.imitatejuejin2.ui.adapter.ArticleTypeViewPager
-import com.example.imitatejuejin2.ui.adapter.NavRecyclerView
-import com.example.imitatejuejin2.databinding.FragmentHeadBinding
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
 import com.example.imitatejuejin2.data.basedata.Article
+import com.example.imitatejuejin2.databinding.FragmentHeadBinding
 import com.example.imitatejuejin2.model.ArticleListBuilder
 import com.example.imitatejuejin2.model.AuthorBriefBuilder
+import com.example.imitatejuejin2.model.AuthorizationBuilder
 import com.example.imitatejuejin2.model.HasChanged
 import com.example.imitatejuejin2.model.LittleNavBuilder
 import com.example.imitatejuejin2.ui.activity.MainActivity
+import com.example.imitatejuejin2.ui.adapter.ArticleTypeViewPager
+import com.example.imitatejuejin2.ui.adapter.NavRecyclerView
 
-/**
- * 首页
- */
 class HeadFragment : Fragment() {
 
     private lateinit var binding: FragmentHeadBinding
@@ -41,7 +45,7 @@ class HeadFragment : Fragment() {
             ArticleListBuilder.getBlankList()
         )
 
-    // 定义一个内部单例类，来控制文章导航栏的当前页面位置
+    // 定义一个内部单例类，来控制文章导航栏的当前页面位置，方便处理光标地变化
     companion object {
         private var currentPosition = 0
             fun getCurrentPosition(): Int {
@@ -71,15 +75,18 @@ class HeadFragment : Fragment() {
             Log.d("fragment","fragment")
 
             val authorBrief = AuthorBriefBuilder.getAuthorBrief()
+            val Authorization = AuthorizationBuilder.getAuthorization()
 
-            // 解析Base64编码，设置右上角的头像
-            Log.d("hhh", authorBrief.head_image)
+            // 设置右上角的头像
             val myHeadImageString = authorBrief.head_image
-            Log.d("myHeadImageUriString", myHeadImageString)
-//            val decodedBytes = Base64.decode(myHeadImageString, Base64.DEFAULT)
-//            val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-//            binding.headMyHeadImage.setImageBitmap(bitmap)
-            Glide.with(this).load(myHeadImageString).into(binding.headMyHeadImage)
+           // 创建带有headers的GlideUrl
+            val glideUrl = GlideUrl(
+                myHeadImageString,
+                LazyHeaders.Builder()
+                    .addHeader("Authorization", Authorization)
+                    .build()
+            )
+            Glide.with(this).load(glideUrl).into(binding.headMyHeadImage)
 
             // 设置文章类型的导航栏
             val articleTypeNav = LittleNavBuilder.createArticleTypeNav()
@@ -131,7 +138,7 @@ class HeadFragment : Fragment() {
 
             // notify
             articleTypeViewPager.notifyDataSetChanged()
-            // 将表示列表是否已经发生改变的值设置会 false，表示未改变
+            // 将表示列表是否已经发生改变的值设置会 false，表示未改变，方便下次更新
             HasChanged.setArticlesItemHasChangedValue1(false)
         }
     }
