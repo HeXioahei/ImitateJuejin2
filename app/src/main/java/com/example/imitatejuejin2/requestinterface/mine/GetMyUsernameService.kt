@@ -1,13 +1,13 @@
 package com.example.imitatejuejin2.requestinterface.mine
 
-import com.example.imitatejuejin2.data.response.GetMyInfoResponse
+import com.example.imitatejuejin2.data.response.GetMyUsernameResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
 
-interface GetMyInfoService {
+interface GetMyUsernameService {
     @GET("/users/information/")
-    fun getMyInfo(
+    fun getMyUsernameService(
         @Header("Authorization") Authorization: String
-    ): Call<GetMyInfoResponse>
+    ): Call<GetMyUsernameResponse>
 }

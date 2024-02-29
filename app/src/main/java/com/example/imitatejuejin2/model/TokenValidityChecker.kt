@@ -3,8 +3,8 @@ package com.example.imitatejuejin2.model
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import com.example.imitatejuejin2.requestinterface.mine.GetMyInfoService
-import com.example.imitatejuejin2.data.response.GetMyInfoResponse
+import com.example.imitatejuejin2.requestinterface.mine.GetMyUsernameService
+import com.example.imitatejuejin2.data.response.GetMyUsernameResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,18 +44,18 @@ class TokenValidityChecker(private val context: Context, private val token: Stri
     // 发送请求到服务器检查Token是否有效（这里需要根据实际情况实现与服务器的通信）
     private fun isTokenValid(token: String): Boolean {
         // TODO: 实现与服务器通信来检查Token的有效性
-        ServiceCreator.create(GetMyInfoService::class.java)
-            .getMyInfoService(token)
-            .enqueue(object : Callback<GetMyInfoResponse> {
+        ServiceCreator.create(GetMyUsernameService::class.java)
+            .getMyUsernameService(token)
+            .enqueue(object : Callback<GetMyUsernameResponse> {
                 override fun onResponse(
-                    call: Call<GetMyInfoResponse>,
-                    response: Response<GetMyInfoResponse>,
+                    call: Call<GetMyUsernameResponse>,
+                    response: Response<GetMyUsernameResponse>,
                 ) {
                     val back = response.body()
                     isTokenValidFlag = back?.code == 200
                 }
 
-                override fun onFailure(call: Call<GetMyInfoResponse>, t: Throwable) {
+                override fun onFailure(call: Call<GetMyUsernameResponse>, t: Throwable) {
                     t.printStackTrace()
                 }
             })

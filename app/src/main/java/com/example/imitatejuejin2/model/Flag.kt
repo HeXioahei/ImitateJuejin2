@@ -1,6 +1,10 @@
 package com.example.imitatejuejin2.model
 
 object Flag {
+
+    private var hasSetAuthorization: Boolean = false
+    private var hasSetUsername: Boolean = false
+    private var hasSetHeadImage: Boolean = false
     private var hasSetAuthorBrief: Boolean = false
     private var hasSetNewList: Boolean = false
     private var hasSetHotList: Boolean = false
@@ -8,6 +12,18 @@ object Flag {
     private var hasSetLikeList: Boolean = false
     private var hasSetCollectList: Boolean = false
     private var hasSetCommentsList: Boolean = false
+
+    fun setHasAuthorization(status: Boolean) {
+        hasSetAuthorization = status
+    }
+
+    fun setHasSetUsername(status: Boolean) {
+        hasSetUsername = status
+    }
+
+    fun setHasSetHeadImage(status: Boolean) {
+        hasSetHeadImage = status
+    }
 
     fun setHasSetAuthorBrief(status: Boolean) {
         hasSetAuthorBrief = status
@@ -35,6 +51,18 @@ object Flag {
 
     fun setHasSetCommentsList(status: Boolean) {
         hasSetCommentsList = status
+    }
+
+    fun getHasSetAuthorization(): Boolean {
+        return hasSetAuthorization
+    }
+
+    fun getHasSetUsername(): Boolean {
+        return hasSetUsername
+    }
+
+    fun getHasSetHeadImage(): Boolean {
+        return hasSetHeadImage
     }
 
     fun getHasSetAuthorBrief(): Boolean {

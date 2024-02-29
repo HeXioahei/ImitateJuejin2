@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.imitatejuejin2.databinding.ItemKidCommentsBinding
 import com.example.imitatejuejin2.data.basedata.KidComments
 import com.example.imitatejuejin2.ui.activity.ArticleActivity
@@ -36,9 +37,10 @@ class CommentListRecyclerView2 (
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = kidCommentList[position]
         // 设置头像
-        val decodedBytes = Base64.decode(item.head_image, Base64.DEFAULT)
-        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-        holder.headImage.setImageBitmap(bitmap)
+//        val decodedBytes = Base64.decode(item.head_image, Base64.DEFAULT)
+//        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+//        holder.headImage.setImageBitmap(bitmap)
+        Glide.with(activity).load(item.head_image).into(holder.headImage)
 
         holder.userName.text = item.username
         holder.time.text = item.time

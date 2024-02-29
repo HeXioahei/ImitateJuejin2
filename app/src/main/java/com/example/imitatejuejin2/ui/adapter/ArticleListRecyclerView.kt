@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.imitatejuejin2.R
 import com.example.imitatejuejin2.databinding.ItemArticleBinding
 import com.example.imitatejuejin2.data.basedata.Article
@@ -72,9 +73,11 @@ class ArticleListRecyclerView(
         Log.d("recyclerView2", "recyclerView2")
         holder.title.text = item.title
 
-        val decodedBytes = Base64.decode(item.author.head_image, Base64.DEFAULT)
-        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-        holder.headImage.setImageBitmap(bitmap)
+        Log.d("hhhhhhhhhhhh", item.author.head_image)
+//        val decodedBytes = Base64.decode(item.author.head_image, Base64.DEFAULT)
+//        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+//        holder.headImage.setImageBitmap(bitmap)
+        Glide.with(activity).load(item.author.head_image).into(holder.headImage)
 
         holder.username.text = item.author.username
         holder.time.text = item.time

@@ -3,6 +3,7 @@ package com.example.imitatejuejin2.ui.activity
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
@@ -11,6 +12,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
@@ -26,6 +28,7 @@ import com.example.imitatejuejin2.requestinterface.mine.edit.EditHeadImageServic
 import com.example.imitatejuejin2.requestinterface.mine.edit.EditPasswordService
 import com.example.imitatejuejin2.requestinterface.mine.edit.EditUsernameService
 import com.example.imitatejuejin2.data.response.BaseResponse
+import com.example.imitatejuejin2.model.FileBuilder
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -37,24 +40,29 @@ import java.io.File
 class EditMyInfoActivity : AppCompatActivity() {
 
     companion object {
-        private lateinit var username: String
+        private var username: String = AuthorBriefBuilder.getAuthorBrief().username
         private val Authorization: String = AuthorizationBuilder.getAuthorization()
-        private lateinit var headImageString: String
+        private var headImageString: String = AuthorBriefBuilder.getAuthorBrief().head_image
     }
 
     private lateinit var binding: ActivityEditMyInfoBinding
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("a2", "a2")
         binding = ActivityEditMyInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        username = intent.getStringExtra("username") as String
-        headImageString = intent.getStringExtra("headImage") as String
-        val decodedBytes = Base64.decode(headImageString, Base64.DEFAULT)
-        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-        binding.editHeadImageView.setImageBitmap(bitmap)
+        username = AuthorBriefBuilder.getAuthorBrief().username
+        headImageString = AuthorBriefBuilder.getAuthorBrief().head_image
+
+//        username = intent.getStringExtra("username") as String
+//        headImageString = intent.getStringExtra("headImage") as String
+//        val decodedBytes = Base64.decode(headImageString, Base64.DEFAULT)
+//        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+//        binding.editHeadImageView.setImageBitmap(bitmap)
+        Glide.with(this).load(headImageString).into(binding.editHeadImageView)
         binding.editUsernameText.text = username
 
         // 返回
@@ -69,7 +77,7 @@ class EditMyInfoActivity : AppCompatActivity() {
                 if (uri != null) {
                     Log.d("PhotoPicker", "Selected URI: $uri")
 
-                    val headImageFile = getImageFileFromUri(this, uri)
+                    val headImageFile = FileBuilder.getImageFileFromUri(this, uri)
                     val requestBody = RequestBody.create(MediaType.parse("head_image"), headImageFile)
                     val multipartBody = MultipartBody.Part.createFormData("head_image", headImageFile.name, requestBody) // 这里的name（”head_image“）必须和接口文档里定义的参数名字一样
 
@@ -90,6 +98,7 @@ class EditMyInfoActivity : AppCompatActivity() {
                                         Toast.LENGTH_SHORT
                                     ).show()
                                     Glide.with(this@EditMyInfoActivity).load(uri).into(binding.editHeadImageView)
+//                                    AuthorBriefBuilder.setHeadImage(Authorization)
                                     AuthorBriefBuilder.setAuthorBrief(Authorization)
                                     HasChanged.setHeadImageHasChangedValue(true)
                                 } else {
@@ -227,23 +236,23 @@ class EditMyInfoActivity : AppCompatActivity() {
         alertDialogBuilder.show()
     }
 
-    /**
-     * 将图片由 uri 转换为 file
-     */
-    private fun getImageFileFromUri(context: Context, imageUri: Uri): File {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = context.contentResolver.query(imageUri, projection, null, null, null)
-
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-                val imagePath = cursor.getString(columnIndex)
-                cursor.close()
-                return File(imagePath)
-            }
-            cursor.close()
-        }
-
-        return File("")
-    }
+//    /**
+//     * 将图片由 uri 转换为 file
+//     */
+//    private fun getImageFileFromUri(context: Context, imageUri: Uri): File {
+//        val projection = arrayOf(MediaStore.Images.Media.DATA)
+//        val cursor = context.contentResolver.query(imageUri, projection, null, null, null)
+//
+//        if (cursor != null) {
+//            if (cursor.moveToFirst()) {
+//                val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+//                val imagePath = cursor.getString(columnIndex)
+//                cursor.close()
+//                return File(imagePath)
+//            }
+//            cursor.close()
+//        }
+//
+//        return File("")
+//    }
 }

@@ -33,6 +33,9 @@ class MainActivity : AppCompatActivity() {
 
         // 重新标记列表的初始化情况，将其标记为未初始化，方便更新操作
         Flag.run {
+//            setHasSetUsername(false)
+//            setHasSetHeadImage(false)
+            setHasSetAuthorBrief(false)
             setHasSetNewList(false)
             setHasSetHotList(false)
             setHasSetMyList(false)

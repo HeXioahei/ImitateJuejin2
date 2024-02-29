@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
 import com.example.imitatejuejin2.ui.adapter.ArticleTypeViewPager
 import com.example.imitatejuejin2.ui.adapter.NavRecyclerView
 import com.example.imitatejuejin2.databinding.FragmentMineBinding
@@ -70,9 +71,10 @@ class MineFragment : Fragment() {
             binding.myUsername.text = authorBrief.username
             // 设置头像
             val myHeadImageString = authorBrief.head_image
-            val decodedBytes = Base64.decode(myHeadImageString, Base64.DEFAULT)
-            val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-            binding.myHeadImage.setImageBitmap(bitmap)
+//            val decodedBytes = Base64.decode(myHeadImageString, Base64.DEFAULT)
+//            val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+//            binding.myHeadImage.setImageBitmap(bitmap)
+            Glide.with(this).load(myHeadImageString).into(binding.myHeadImage)
             // 设置文章导航栏
             navRecyclerView = NavRecyclerView(LittleNavBuilder.createMyInfoNav(), binding.myListContent, this)
             binding.myListGuide.adapter = navRecyclerView
@@ -95,8 +97,8 @@ class MineFragment : Fragment() {
             // 跳转到编辑资料页面
             binding.updateInfo.setOnClickListener {
                 val intent = Intent(mainActivity, EditMyInfoActivity::class.java)
-                intent.putExtra("username", authorBrief.username)
-                intent.putExtra("headImage", authorBrief.head_image)
+                //intent.putExtra("username", authorBrief.username)
+                //intent.putExtra("headImage", authorBrief.head_image)
                 startActivity(intent)
             }
         }

@@ -2,18 +2,22 @@ package com.example.imitatejuejin2.ui.activity
 
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.MediaStore.Images.Media
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.imitatejuejin2.databinding.ActivityRegisterBinding
 import com.example.imitatejuejin2.model.ServiceCreator
 import com.example.imitatejuejin2.requestinterface.begin.RegisterService
 import com.example.imitatejuejin2.data.response.BaseResponse
+import com.example.imitatejuejin2.model.FileBuilder
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -21,6 +25,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -30,6 +37,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var registerPassword: String
     private lateinit var headImageFile: File
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
@@ -46,9 +54,9 @@ class RegisterActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
                     Log.d("PhotoPicker", "Selected URI: $uri")
-                    // Glide.with(this).load(uri).into(binding.registerHeadImage)
+                    Glide.with(this).load(uri).into(binding.registerHeadImage)
 
-                    headImageFile = getImageFileFromUri(this, uri)
+                    headImageFile = FileBuilder.getImageFileFromUri(this, uri)
                     Log.d("file1", headImageFile.name.toString())
                     Log.d("file2", headImageFile.toString())
                 } else {
@@ -75,6 +83,7 @@ class RegisterActivity : AppCompatActivity() {
             // 确认两次密码是否一致
             if (confirmPassword == registerPassword) {
 
+                Toast.makeText(this, "正在注册...", Toast.LENGTH_LONG).show()
                 ServiceCreator.create(RegisterService::class.java)
                     .register(registerUsername, registerPassword, multipartBody)
                     .enqueue(object : Callback<BaseResponse> {
@@ -106,24 +115,73 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * 将图片由 uri 转换为 file
-     */
-    private fun getImageFileFromUri(context: Context, imageUri: Uri): File {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = context.contentResolver.query(imageUri, projection, null, null, null)
-
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-                val imagePath = cursor.getString(columnIndex)
-                cursor.close()
-                return File(imagePath)
-            }
-            cursor.close()
-        }
-
-        return File("")
-    }
+//    /**
+//     * 将图片由 uri 转换为 file
+//     */
+//
+//    @RequiresApi(Build.VERSION_CODES.Q)
+//    fun getImageFileFromUri(context: Context, imageUri: Uri): File {
+//        // 检查Android版本，对于Android 10及以上版本，使用新的MediaStore API
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//            return getImageFileFromUriAboveQ(context, imageUri)
+//        } else {
+//            // 对于旧版本Android，可以使用之前的方法获取文件路径
+//            // ...
+//            return getImageFileFromUriUnderQ(context, imageUri)
+//        }
+//    }
+//
+//    private fun getImageFileFromUriAboveQ(context: Context, imageUri: Uri): File {
+//        val inputStream: InputStream? = context.contentResolver.openInputStream(imageUri)
+//        if (inputStream == null) {
+//            return File("")
+//        }
+//
+//        // 创建一个临时文件来保存图片内容
+//        val tempFile = File(context.cacheDir, "temp_image.jpg")
+//        val outputStream: OutputStream = FileOutputStream(tempFile)
+//
+//        // 将图片内容从输入流复制到输出流（临时文件）
+//        val bufferSize = 1024
+//        val buffer = ByteArray(bufferSize)
+//        var bytesRead: Int
+//        try {
+//            bytesRead = inputStream.read(buffer)
+//            while (bytesRead != -1) {
+//                outputStream.write(buffer, 0, bytesRead)
+//                bytesRead = inputStream.read(buffer)
+//            }
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//            inputStream.close()
+//            outputStream.close()
+//            return File("")
+//        } finally {
+//            inputStream.close()
+//            outputStream.close()
+//        }
+//
+//        return tempFile
+//    }
+//
+//    @RequiresApi(Build.VERSION_CODES.Q)
+//    private fun getImageFileFromUriUnderQ(context: Context, imageUri: Uri): File {
+//        // val projection = arrayOf(MediaStore.Images.Media.DATA)
+//        val projection = arrayOf(MediaStore.Images.Media.DATA)
+//        val cursor = context.contentResolver.query(imageUri, projection, null, null, null)
+//
+//        if (cursor != null) {
+//            if (cursor.moveToFirst()) {
+//                //val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+//                val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+//                val imagePath = cursor.getString(columnIndex)
+//                Log.d("pathname", imagePath.toString())
+//                return File(imagePath)
+//            }
+//            cursor.close()
+//        }
+//
+//        return File("")
+//    }
 
 }

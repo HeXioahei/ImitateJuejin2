@@ -1,5 +1,6 @@
 package com.example.imitatejuejin2.ui.fragment
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -81,6 +82,7 @@ class WriteFragment : Fragment() {
                             ArticleListBuilder.setAllArticleList(AuthorizationBuilder.getAuthorization())
                             HasChanged.setArticlesItemHasChangedValue1(true)
                             HasChanged.setArticlesItemHasChangedValue2(true)
+
                         } else {
                             Toast.makeText(mainActivity, "发表失败", Toast.LENGTH_SHORT).show()
                         }

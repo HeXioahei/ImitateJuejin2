@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
 import com.example.imitatejuejin2.ui.adapter.ArticleTypeViewPager
 import com.example.imitatejuejin2.ui.adapter.NavRecyclerView
 import com.example.imitatejuejin2.databinding.FragmentHeadBinding
@@ -72,11 +73,13 @@ class HeadFragment : Fragment() {
             val authorBrief = AuthorBriefBuilder.getAuthorBrief()
 
             // 解析Base64编码，设置右上角的头像
+            Log.d("hhh", authorBrief.head_image)
             val myHeadImageString = authorBrief.head_image
             Log.d("myHeadImageUriString", myHeadImageString)
-            val decodedBytes = Base64.decode(myHeadImageString, Base64.DEFAULT)
-            val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-            binding.headMyHeadImage.setImageBitmap(bitmap)
+//            val decodedBytes = Base64.decode(myHeadImageString, Base64.DEFAULT)
+//            val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+//            binding.headMyHeadImage.setImageBitmap(bitmap)
+            Glide.with(this).load(myHeadImageString).into(binding.headMyHeadImage)
 
             // 设置文章类型的导航栏
             val articleTypeNav = LittleNavBuilder.createArticleTypeNav()
