@@ -57,11 +57,6 @@ class EditMyInfoActivity : AppCompatActivity() {
         username = AuthorBriefBuilder.getAuthorBrief().username
         headImageString = AuthorBriefBuilder.getAuthorBrief().head_image
 
-//        username = intent.getStringExtra("username") as String
-//        headImageString = intent.getStringExtra("headImage") as String
-//        val decodedBytes = Base64.decode(headImageString, Base64.DEFAULT)
-//        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-//        binding.editHeadImageView.setImageBitmap(bitmap)
         Glide.with(this).load(headImageString).into(binding.editHeadImageView)
         binding.editUsernameText.text = username
 
