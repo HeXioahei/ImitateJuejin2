@@ -62,11 +62,11 @@ object ArticleListBuilder {
                 Log.d("newcode", back?.code.toString())
                 if (back?.data != null) {
                     newList = back.data
-                    Log.d("newList", newList.size.toString())
-                    Log.d("newListContent", newList.toString())
-                    Log.d("newListContent1", newList[0].toString())
-                    Log.d("newListContent11", newList[0].author.toString())
-                    Log.d("newListContent111", newList[0].author.username)
+//                    Log.d("newList", newList.size.toString())
+//                    Log.d("newListContent", newList.toString())
+//                    Log.d("newListContent1", newList[0].toString())
+//                    Log.d("newListContent11", newList[0].author.toString())
+//                    Log.d("newListContent111", newList[0].author.username)
 
                 }
 

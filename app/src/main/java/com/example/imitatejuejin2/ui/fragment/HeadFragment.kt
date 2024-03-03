@@ -65,8 +65,8 @@ class HeadFragment : Fragment() {
         Log.d("onCreateView", "onCreateView")
         binding = FragmentHeadBinding.inflate(inflater, container, false)
 
-        Log.d("newListSize", outerList.size.toString())
-        Log.d("newList1111", outerList[1][1].author.username)
+//        Log.d("newListSize", outerList.size.toString())
+//        Log.d("newList1111", outerList[1][1].author.username)
 
         // 获取 Activity
         val mainActivity: MainActivity
